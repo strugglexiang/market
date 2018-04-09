@@ -5,6 +5,17 @@ let global = require('../config.js')
 let moment = require('moment')
 let jwt = require('jwt-simple')
 
+/**
+ * 目录
+ * 用户登录
+ * 检查token是否失效
+ * 负责人创建员工
+ * 修改资料
+ * 查看用户(有分页操作)
+ * 获取用户资料
+ * 删除工作人员
+ */
+
 //用户登录
 router.post('/login', function(req, res, next) {
     //  console.log(req.body)
@@ -42,7 +53,7 @@ router.post('/login', function(req, res, next) {
         //  console.log('登录成功',doc)
          let expires = moment().add(20,'minutes').valueOf();
          let token = jwt.encode({
-           iss: doc.authority,
+           iss: doc,
            exp: expires
          }, global.secret);  
 
@@ -89,14 +100,14 @@ router.post('/createWorker', function(req, res, next) {
 
 //修改资料
 router.post('/updateUser',(req,res,err)=>{
-    if(!req.body.id){
-        return res.json({
-            status:"0",
-            msg:"修改必需传入员工id"
-        })
-    }
+    // if(!req.body.id){
+    //     return res.json({
+    //         status:"0",
+    //         msg:"修改必需传入员工id"
+    //     })
+    // }
     let params = {
-        _id:req.body.id
+        _id:global.getUserInfo()['_id']
     }
     let upobj = {}
     if(req.body.userName){
@@ -238,17 +249,53 @@ router.get('/getUsers',(req,res,next)=>{
     }
 })
 
+// 获取用户资料
+//这里应该是任何用户都有的权限，和登录一样
+//没有操作
+router.get('/userInfo',(req,res,next) => {
+    // if(!req.query.id){
+    //     return res.json({
+    //         status:"0",
+    //         msg:"获取个人资料应该传入id"
+    //     })
+    // }
+    let params = {
+        _id:global.getUserInfo()['_id']
+    }
+    User.find(params,(err,doc) => {
+        if(err){
+            return res.json({
+                status:'0',
+                msg:err.message
+            })
+        }
+        if(!doc.length){
+            return {
+                statu:'0',
+                msg:"没有找到",
+                result:doc
+            }
+        }
+        return res.json({
+            status:'1',
+            msg:"获取个人信息成功",
+            result:doc
+        })
+    })
+})
+
+
 // 删除工作人员
 router.get('/delUser',(req,res,err) => {
     // console.log('我调用了这里')
-    if(!req.query.id){
-         return res.json({
-             status:'0',
-             msg:"删除用户请传入id"
-         })
-    }
+    // if(!req.query.id){
+    //      return res.json({
+    //          status:'0',
+    //          msg:"删除用户请传入id"
+    //      })
+    // }
     let params = {
-        _id: req.query.id
+        _id:global.getUserInfo()['_id']
     }
     User.remove(params,(err) => {
         if(err){

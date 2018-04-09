@@ -7,12 +7,20 @@ let mongoUrl = 'mongodb://127.0.0.1:27017/hongshanmarket'
 //token加密秘钥
 let secret = 'jsonwebtokenStrugglexiang'
 
-//维护的用户权限变量
-let userAuthority = []
+//整套api的权限对照表
+let compareAuth = []
 
-// 设置用户权限
-function getUserAuthority(){
-    return userAuthority
+// 获得权限对照表
+function getcompareAuth(){
+    return compareAuth
+}
+
+// 当前token解析出来后的用户信息
+let userInfo = null
+
+// 获取当前token的userInfo
+function getUserInfo(){
+    return userInfo
 }
 
 //MD5加密函数
@@ -43,26 +51,25 @@ function validateTotoken(req,res,next){
           // 如果失效
           if (decoded.exp <= Date.now()) {
               return res.json({
-                  status:"0",
+                  status:"405",
                   msg:'token失效,请重新登录'
               })
           }   
-          //token在有效期内，解析出该用户的权限，放入config维护的权限数组中
         //   console.log('用户权限',decoded.iss)
-        //   userAuthority = [1]
+             userInfo = decoded.iss
           next()        
        } catch (error) {
            //解析的过程失败，抛出异常
            return res.json({
-               status:'0',
-               result:'token解析失败，通知后端管理人员检查',
+               status:'406',
+               msg:'token解析失败，通知后端管理人员检查',
                err:error.message
            })
 
        }
     }else{
         return res.json({
-            status:'0',
+            status:'407',
             msg:'请求未携带token'
         })
     }     
@@ -73,6 +80,8 @@ module.exports = {
     secret, //token加密秘钥
     encrypt,//md5加密函数
     validateTotoken,//token验证中间件
-    getUserAuthority,//维护的用户权限变量
+    getcompareAuth,//整套api的权限对照表
+    userInfo, //当前token解析出来后的用户信息
+    getUserInfo,// 获取当前token的userInfo
     delKong,//消除空格
 }

@@ -49,11 +49,11 @@ router.post('/login', function(req, res, next) {
                  msg:"用户名或密码错误"
              })
          }
-         //登录成功过后生成token,这里的token用权限数组加密
+         //登录成功过后生成token
         //  console.log('登录成功',doc)
          let expires = moment().add(20,'minutes').valueOf();
          let token = jwt.encode({
-           iss: doc.authority,
+           iss: doc,
            exp: expires
          }, global.secret);  
 

@@ -22,9 +22,23 @@ let getters = {
     }
 }
 
+let mutations = {
+    //生成的有权限的路由表mutation
+    mytation_action_generateRoutes(state,routers){
+        state.addRouters = routers;
+        state.routers = noAuRoutes.concat(routers);        
+    },
+    //存入token的mutaion
+    mutation_savetoken(state,token){
+        state.token = token
+    }
+}
+
+
 let actions = {
     //用户登录的action
     action_loginByUserName({ commit }, userInfo) {
+        // console.log(userInfo)
         const username = userInfo.userName.trim()
         return new Promise((resolve, reject) => {
             let obj = {
@@ -33,24 +47,21 @@ let actions = {
             }
             login(obj)
             .then(res => {
-                if(res.status === '1'){
+                if(res.data.status === '1'){
                     const data = res.result
-                    commit('action_saveToken',res.result.token)
-                    sessionStorage.setItem('token', res.result.token)
-                    sessionStorage.setItem('id', res.result['_id'])
-                    resolve()
-                }else{
-                    reject(res)
+                    // console.log('我运行到了这里')
+                    commit('mutation_savetoken',res.data.token)
+                    sessionStorage.setItem('token',res.data.token)
+                    // sessionStorage.setItem('id', res.result['_id'])
                 }
+                // console.log(sessionStorage)
+                resolve(res)
             })
             .catch(error => {
                 reject(error)
             });
         });
-    },  
-    action_saveToken({ commit }, token){
-        commit('mutation_savetoken',token)
-    },
+    },        
     //获取用户信息的action(用来获取用户权限的)
     action_getUserInfo({ commit },userId){
         return new Promise((resolve, reject) => {
@@ -60,13 +71,8 @@ let actions = {
             getUserInfo(obj)
             .then(res => {
                 // console.log('我运行到了这里')
-                 if(res.status === '1'){
-                     //需要存入用户其他信息的在这里操作
-                    resolve(res.result.authority) 
-                 }else{
-                     //status = 0,会怎样?
-                    reject(res)
-                 }
+                // 需要存入用户其他信息的在这里操作
+                 resolve(res.result.authority) 
             })
             .catch(error => {
                 reject(error)
@@ -85,18 +91,6 @@ let actions = {
             commit('mytation_action_generateRoutes', afterFilterRoutes);
             resolve();           
         })
-    }
-}
-
-let mutations = {
-    //生成的有权限的路由表mutation
-    mytation_action_generateRoutes(state,routers){
-        state.addRouters = routers;
-        state.routers = noAuRoutes.concat(routers);        
-    },
-    //存入token的mutaion
-    mutation_savetoken(state,token){
-        state.token = token
     }
 }
 

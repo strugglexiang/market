@@ -9,8 +9,12 @@ import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import { Message } from 'element-ui'
+
 //引入font-awesome字体图标库
-import 'font-awesome/css/font-awesome.min.css';
+import 'font-awesome/css/font-awesome.css'
+
+//引入自写公共样式
+import '@/assets/css/reset.css'
 
 //调试功能
 Vue.config.productionTip = false

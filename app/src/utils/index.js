@@ -6,10 +6,10 @@ import { Message } from 'element-ui'
 
 // 创建axios实例
 const service = axios.create({
-    baseURL: api.getApiUrl() , // api的base_url
+    // baseURL: api.getApiUrl() , // api的base_url
     timeout: 5000 // 请求超时时间
 })
-
+// console.log(service)
 // request拦截器
 service.interceptors.request.use(config => {
     // console.log('我要拦截请求了')
@@ -25,7 +25,7 @@ service.interceptors.request.use(config => {
 //res拦截器
 service.interceptors.response.use(response => {
     let res = response.data
-    console.log('resposeDate', res)
+    // console.log('resposeDate', res)
             // Message({
             //     message: res.msg,
             //     type: 'error',

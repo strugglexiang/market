@@ -10,6 +10,7 @@
 - [2-使用字体图表](#2-使用字体图表)
 - [3-使用elementUi](#3-使用elementUi)
 - [4-根据权限动态生成路由](#4-根据权限动态生成路由)
+- [5-在vue中写scss](#5-在vue中写scss)
 
 
 ### 1-项目结构搭建
@@ -113,3 +114,23 @@ Vue.use(ElementUI)
 ```
 
 ### 4-根据权限动态生成路由
+
+### 5-在vue中写scss
+为了使用sass，我们需要安装sass的依赖包
+```
+npm install --save-dev sass-loader
+//sass-loader依赖于node-sass
+npm install --save-dev node-sass
+
+```
+### 6-在vue中使用样式的经验
+1. 水平垂直居中
+```
+水平居中:justify-content :center;
+垂直居中:align-items:center;
+```
+2. vue中字体使用?
+
+
+### 7-store里面的action里面如果要调用同级action的话
+https://vuex.vuejs.org/zh-cn/actions.html#

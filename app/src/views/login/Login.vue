@@ -82,34 +82,35 @@ export default {
           if (valid) {
             // alert('submit!');
             // console.log(this.form)
-              api.setApiUrl(this.form.part)
-              console.log(api.getApiUrl())
-              this.loading = true
-              this.$store.dispatch('action_loginByUserName',this.form)
-              .then(res => {
-                  console.log(res)
-                  if(res.data.status === '1'){
-                      this.$message({
-                          type:'success',
-                          duration:1000,
-                          message:res.data.msg
-                      })
-                      this.$router.push({ path: "/" });
-                      this.loading = false
-                  }else{
-                      this.$message({
-                          type:'error',
-                          duration:1000,
-                          message:res.data.msg
-                      })
-                      this.loading = false
-                  }
-              })
-              .catch(err => {
-                //   console.log('我运行了这里')
-                //   console.log(err)
-                 this.loading = false
-              })
+            //   api.setApiUrl(this.form.part)
+            //   console.log(api.getApiUrl())
+            //   this.loading = true
+            //   this.$store.dispatch('action_loginByUserName',this.form)
+            //   .then(res => {
+            //     //   console.log(res)
+            //       if(res.data.status === '1'){
+            //           this.$message({
+            //               type:'success',
+            //               duration:1000,
+            //               message:res.data.msg
+            //           })
+            //           this.$router.push({ path: "/" });
+            //           this.loading = false
+            //       }else{
+            //           this.$message({
+            //               type:'error',
+            //               duration:1000,
+            //               message:res.data.msg
+            //           })
+            //           this.loading = false
+            //       }
+            //   })
+            //   .catch(err => {
+            //     //   console.log('我运行了这里')
+            //     //   console.log(err)
+            //      this.loading = false
+            //   })
+            this.$router.push({ path: "/" });
           } else {
             // console.log('error submit!!');
             return false;
@@ -158,6 +159,10 @@ $bg:#2d3a4b;
         justify-content: center;
         font-size:15px;
         margin-bottom:22px;
+        .title{
+              -webkit-user-select: none;
+              user-select: none;
+        }
     }
     .bt-box{
         display: flex;

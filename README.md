@@ -134,3 +134,35 @@ npm install --save-dev node-sass
 
 ### 7-store里面的action里面如果要调用同级action的话
 https://vuex.vuejs.org/zh-cn/actions.html#
+
+### 8-文字不可复制
+```
+  -webkit-user-select: none;
+  user-select: none;
+```
+
+### 9-store模块化
+```
+1.子模块
+export default {
+    actions,
+    mutations,
+}
+2.getters模块
+export default {
+    计算属性(state) => {
+        return state...
+    }
+}
+3.导出store
+export default {
+    modules:{
+        子模块
+    },
+    getters
+}
+```
+
+### 10-class的绑定
+http://www.jb51.net/article/91957.htm
+

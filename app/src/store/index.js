@@ -1,103 +1,37 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { getAuthority } from '@/ajax/authority'
-import { login , getUserInfo } from '@/ajax/login'
-// console.log(Vuex.Store)
-import { noAuRoutes, changRoutes } from '@/router'
-// console.log(noAuRoutes, changRoutes)
+
+//引入user(登录模块的store)
+import user from './modules/user'
+//引入布局store
+import home from './modules/home'
+// tagview 
+import tagsView from './modules/tagsView'
 Vue.use(Vuex)
 
-let state = {
-    token:null,
-    routers: noAuRoutes,//正常路由
-    addRouters: [],   // 生成的有权限的路由的表
-}
+
 
 let getters = {
     personAu(state){
-        return state.addRouters
+        return state.user.addRouters
     },//生成的有权限的路由的表
     token(state){
-        return state.token
-    }
-}
-
-let mutations = {
-    //生成的有权限的路由表mutation
-    mytation_action_generateRoutes(state,routers){
-        state.addRouters = routers;
-        state.routers = noAuRoutes.concat(routers);        
+        return state.user.token
     },
-    //存入token的mutaion
-    mutation_savetoken(state,token){
-        state.token = token
-    }
-}
-
-
-let actions = {
-    //用户登录的action
-    action_loginByUserName({ commit }, userInfo) {
-        // console.log(userInfo)
-        const username = userInfo.userName.trim()
-        return new Promise((resolve, reject) => {
-            let obj = {
-                userName: userInfo.userName,
-                password: userInfo.password
-            }
-            login(obj)
-            .then(res => {
-                if(res.data.status === '1'){
-                    const data = res.result
-                    // console.log('我运行到了这里')
-                    commit('mutation_savetoken',res.data.token)
-                    sessionStorage.setItem('token',res.data.token)
-                    // sessionStorage.setItem('id', res.result['_id'])
-                }
-                // console.log(sessionStorage)
-                resolve(res)
-            })
-            .catch(error => {
-                reject(error)
-            });
-        });
-    },        
-    //获取用户信息的action(用来获取用户权限的)
-    action_getUserInfo({ commit },userId){
-        return new Promise((resolve, reject) => {
-            let obj = {
-               id:userId
-            }
-            getUserInfo(obj)
-            .then(res => {
-                // console.log('我运行到了这里')
-                // 需要存入用户其他信息的在这里操作
-                 resolve(res.result.authority) 
-            })
-            .catch(error => {
-                reject(error)
-            });
-        });
+    sideStatu(state){
+        // console.log(state)
+        return state.home.sideStatu
     },
-    //生成路由的action
-    action_generateRoutes({ commit }, au){
-        new Promise(resolve => {
-            //生成路由表，用到过滤器
-            afterFilterRoutes = changRoutes.filters((item,index,array) => {
-                // 返回true代表过滤掉了
-                return true
-            })
-            console.log('生成的有权限的路由表',afterFilterRoutes)
-            commit('mytation_action_generateRoutes', afterFilterRoutes);
-            resolve();           
-        })
-    }
+    visitedViews: state => state.tagsView.visitedViews,
+    cachedViews: state => state.tagsView.cachedViews,    
 }
 
 export default  new Vuex.Store({
-    state,
+    modules:{
+      user,
+      home,
+      tagsView,
+    },
     getters,
-    actions,
-    mutations,
 })
 

@@ -4,7 +4,7 @@
       <el-row>
         <el-col :span="24">
             <div class="title-box">
-                <h3 class="title">所有商品</h3>
+                <h3 class="title">商品类型</h3>
             </div>
         </el-col>
       </el-row>
@@ -13,7 +13,7 @@
           <el-col :span="24">
               <div class="nav-box" >
                   <div class="bt-box">
-                      <el-button @click = 'clickAdd' type="primary" size='small' icon="el-icon-edit">添加商品</el-button>
+                      <el-button @click = 'clickAdd' type="primary" size='small' icon="el-icon-edit">添加类型</el-button>
                   </div>                
                   <div class="input-box">
                       <el-input 
@@ -62,7 +62,7 @@
       </el-row>
       <!-- 添加模态框  -->
       <el-dialog
-          title="添加商品"
+          title="添加商品类型"
           :visible.sync="showAddModal"
           width="50%"
       >
@@ -73,7 +73,7 @@
       </el-dialog>        
       <!-- 修改模态框  -->
       <el-dialog
-          title="修改商品信息"
+          title="修改商品类型"
           :visible.sync="showEditModal"
           width="50%"
       >
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import minx from './minx/allgoods'
+import minx from './minx/goodType'
 export default {
     mixins: [minx],
     data(){
@@ -125,7 +125,7 @@ export default {
       // 点击删除按钮
       handleDel(index, row){
         // console.log(row)
-          this.$confirm("确认删除商品吗?", "提示", {
+          this.$confirm("确认删除商品类型吗?", "提示", {
             type: "warning"
           })
           .then(() => {

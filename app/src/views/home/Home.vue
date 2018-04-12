@@ -57,6 +57,7 @@ export default {
 .home-right{
     width:100%;
     height:100%;
+    overflow-x: auto;
     margin-left:60px;
     transition: margin-left .28s;
 }

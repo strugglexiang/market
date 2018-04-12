@@ -4,12 +4,14 @@ import Router from 'vue-router'
 //--- 登录
 import Login from '@/views/login/Login'
 import Home from '@/views/home/Home'
-import Index from '@/views/index/Index'
+import IndexZong from '@/views/index/indexZong'
+import IndexFen from '@/views/index/indexFen'
 // ---------引入需要权限动态生成的路由---------
 //--用户管理
 import allUsers from '@/views/userManagement/allUsers'
 //--商品管理
 import allGoods from '@/views/goodManagement/allGoods'
+import goodType from '@/views/goodManagement/goodTypes'
 //--进货管理
 import allPurchases from '@/views/purchaseManagement/allPurchase'
 //--订单管理
@@ -38,7 +40,7 @@ let routes = [
     children: [
        {
          path:'',
-         component:Index,
+         component:IndexFen,
          name:'首页'//二级路由默认展示首页
        },
     ]
@@ -71,6 +73,12 @@ let routes = [
          icon:'fa fa-gift',     
          name:'所有商品'
        },
+       {
+        path:'/goodType',
+        component:goodType,
+        icon:'fa fa-lightbulb-o',     
+        name:'商品类型'
+      },       
     ]
   }, 
   {

@@ -166,3 +166,42 @@ export default {
 ### 10-class的绑定
 http://www.jb51.net/article/91957.htm
 
+### 11-函数节流
+http://www.jb51.net/article/105022.htm
+1. 这种实现方式的思路很好理解：设置一个一间隔时间，比如50毫秒，以此时间为基准设置定时器，当第一次触发事件到第二次触发事件间隔小于50毫秒时，清除这个定时器，并设置一个新的定时器，以此类推，直到有一次事件触发后50毫秒内没有重复触发。
+```
+function debounce(method){ 
+  clearTimeout(method.timer); 
+  method.timer=setTimeout(function(){ 
+   method(); 
+  },50); 
+} 
+这种设计方式有一个问题：本来应该多次触发的事件，可能最终只会发生一次。具体来说，一个循序渐进的滚动事件，如果用户滚动太快速，或者程序设置的函数节流间隔时间太长，那么最终滚动事件会呈现为一个很突然的跳跃事件，中间过程都被节流截掉了。这个例子举的有点夸张了，不过使用这种方式进行节流最终是会明显感受到程序比不节流的时候“更突兀”，这对于用户体验是很差的。有一种弥补这种缺陷的设计思路。
+```
+2. 第二种实现方式的思路与第一种稍有差别：设置一个间隔时间，比如50毫秒，以此时间为基准稳定分隔事件触发情况，也就是说100毫秒内连续触发多次事件，也只会按照50毫秒一次稳定分隔执行。代码如下：
+```
+var oldTime=new Date().getTime(); 
+var delay=50; 
+function throttle1(method){ 
+  var curTime=new Date().getTime(); 
+  if(curTime-oldTime>=delay){ 
+   oldTime=curTime; 
+   method(); 
+  } 
+} 
+```
+```
+var timer=undefined,delay=50; 
+function throttle2(method){ 
+  if(timer){ 
+    return ; 
+  } 
+  method(); 
+  timer=setTimeout(function(){ 
+    timer=undefined; 
+  },delay); 
+}
+```
+
+
+https://segmentfault.com/q/1010000008160697

@@ -59,6 +59,18 @@ Vue.directive('focus', {
   }
 })
 
+// 全局混入
+Vue.mixin({
+   methods:{
+     jieliu(method,arg){
+       clearTimeout(method.timer); 
+       method.timer=setTimeout(function(){ 
+           method(arg); 
+       },150);        
+     }
+   }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

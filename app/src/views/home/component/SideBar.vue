@@ -89,7 +89,7 @@ $menuHover:#001528;//hover颜色
     position: fixed;
     max-width:200px;
     height:100%;    
-    z-index: 10000;
+    z-index: 100;
 }
 //正常设置
 .side{

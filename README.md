@@ -207,4 +207,33 @@ function throttle2(method){
 https://segmentfault.com/q/1010000008160697
 
 ### 解决打包问题
+打包出现空白页
+>config文件夹下 index.js
+```
+  build: {
+    // Template for index.html
+    index: path.resolve(__dirname, '../dist/index.html'),
+
+    // Paths
+    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsSubDirectory: 'static',
+    assetsPublicPath: './',
+```
 https://www.cnblogs.com/wanf/p/7871787.html
+
+字体图标打包错误
+在build utils.js文件下
+```
+    // Extract CSS when that option is specified
+    // (which is the case during production build)
+    if (options.extract) {
+      return ExtractTextPlugin.extract({
+        use: loaders,
+        fallback: 'vue-style-loader',
+        publicPath:'../../'
+      })
+    } else {
+      return ['vue-style-loader'].concat(loaders)
+    }
+  }
+```

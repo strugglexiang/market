@@ -205,3 +205,6 @@ function throttle2(method){
 
 
 https://segmentfault.com/q/1010000008160697
+
+### 解决打包问题
+https://www.cnblogs.com/wanf/p/7871787.html

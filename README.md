@@ -11,6 +11,13 @@
 - [3-使用elementUi](#3-使用elementUi)
 - [4-根据权限动态生成路由](#4-根据权限动态生成路由)
 - [5-在vue中写scss](#5-在vue中写scss)
+- [6-在vue中使用样式的经验](#6-在vue中使用样式的经验)
+- [7-store里面的action里面如果要调用同级action的话](#7-store里面的action里面如果要调用同级action的话)
+- [8-文字不可复制](#8-文字不可复制)
+- [9-store模块化](#9-store模块化)
+- [10-class的绑定](#10-class的绑定)
+- [11-函数节流](#11-函数节流)
+- [12-解决打包问题](#12-解决打包问题)
 
 
 ### 1-项目结构搭建
@@ -206,7 +213,7 @@ function throttle2(method){
 
 https://segmentfault.com/q/1010000008160697
 
-### 解决打包问题
+### 12-解决打包问题
 打包出现空白页
 >config文件夹下 index.js
 ```

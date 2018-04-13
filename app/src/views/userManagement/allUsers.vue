@@ -36,15 +36,15 @@
                 <el-table :data="users" v-loading="listLoading" element-loading-text="拼命加载中" >
                       <el-table-column prop="userName" label="用户名"  sortable>
                       </el-table-column>
-                      <el-table-column prop="tel" label="性别"  >
+                      <el-table-column prop="sex" label="性别"  >
                           <template slot-scope="scope">
-                            <el-tag :type="scope.row.sex=== 1?'info':scope.row.sex==2?'success':'danger'">
+                            <el-tag :type="scope.row.sex=== 1?'':scope.row.sex==2?'warning':'info'">
                               {{scope.row.sex=== 1?'男':scope.row.sex==2?'女':'未知'}}
                             </el-tag>
                           </template>                        
                       </el-table-column>  
                        <!-- 添加的时候是必选的  -->
-                      <el-table-column prop="sex" label="联系电话"  sortable>
+                      <el-table-column prop="tel" label="联系电话"  sortable>
                       </el-table-column>                                            
                       <el-table-column label="操作" >
                         <template slot-scope="scope">

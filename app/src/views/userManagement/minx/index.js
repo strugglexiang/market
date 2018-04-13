@@ -15,11 +15,11 @@ export default {
             .then(res => {
                 // console.log(res)
                 if(res.data.status === '1'){
-                    this.$message({
-                        type:'success',
-                        duration:2000,
-                        message:res.data.msg
-                    })  
+                    // this.$message({
+                    //     type:'success',
+                    //     duration:2000,
+                    //     message:res.data.msg
+                    // })  
                     // console.log(res.data.result)  
                     //   authority password userName tel sex
                     this.users = res.data.result
@@ -76,7 +76,7 @@ export default {
                 // console.log(res)
                 if(res.data.status === '1'){
                     this.$message({
-                        type:'error',
+                        type:'success',
                         duration:2000,
                         message:res.data.msg
                     })

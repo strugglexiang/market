@@ -97,8 +97,16 @@ export default {
                           message:res.data.msg
                       })
                       //登录成功后
-                      console.log(api.getApiUrl())
                       this.$router.push({ path: "/" });
+                      /**
+                       * 1.总部 存1
+                       * 2.洪山分部 存2 
+                       */
+                      if(this.form.part === 'http://127.0.0.1:2501'){
+                           sessionStorage.setItem('apiUrl',1)
+                      }else if (this.form.part === 'http://127.0.0.1:2502'){
+                           sessionStorage.setItem('apiUrl',2)
+                      }
                       this.loading = false
                   }else{
                       this.$message({

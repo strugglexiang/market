@@ -2,6 +2,11 @@
 // let apiUrl = 'http://127.0.0.1:2501' //总部
 
 let apiUrl = ''
+if(sessionStorage.getItem('apiUrl') === '1'){
+    apiUrl = 'http://127.0.0.1:2501'
+}else if(sessionStorage.getItem('apiUrl') === '2'){
+    apiUrl = 'http://127.0.0.1:2502'
+}
 
 function setApiUrl(str){
     apiUrl = str

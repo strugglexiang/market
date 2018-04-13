@@ -1,7 +1,7 @@
-let apiUrl = 'http://127.0.0.1:2502' //洪山桥分部
+// let apiUrl = 'http://127.0.0.1:2502' //洪山桥分部
 // let apiUrl = 'http://127.0.0.1:2501' //总部
 
-// let apiUrl = ''
+let apiUrl = ''
 
 function setApiUrl(str){
     apiUrl = str

@@ -51,11 +51,13 @@ export default {
           partChoose:[
             {
                 label:'总部',
-                value:'http://localhost:2501'
+                // value:'http://localhost:2501',
+                value:'http://127.0.0.1:2501'
             },              
             {
                 label:'洪山桥部',
-                value:'http://localhost:2502'
+                value:'http://127.0.0.1:2502',
+                // value:'http://localhost:2501'
             },
           ],//部门选择
           form:{
@@ -82,34 +84,36 @@ export default {
           if (valid) {
             // alert('submit!');
             // console.log(this.form)
-            //   api.setApiUrl(this.form.part)
+              api.setApiUrl(this.form.part)
             //   console.log(api.getApiUrl())
-            //   this.loading = true
-            //   this.$store.dispatch('action_loginByUserName',this.form)
-            //   .then(res => {
-            //     //   console.log(res)
-            //       if(res.data.status === '1'){
-            //           this.$message({
-            //               type:'success',
-            //               duration:1000,
-            //               message:res.data.msg
-            //           })
-            //           this.$router.push({ path: "/" });
-            //           this.loading = false
-            //       }else{
-            //           this.$message({
-            //               type:'error',
-            //               duration:1000,
-            //               message:res.data.msg
-            //           })
-            //           this.loading = false
-            //       }
-            //   })
-            //   .catch(err => {
-            //     //   console.log('我运行了这里')
-            //     //   console.log(err)
-            //      this.loading = false
-            //   })
+              this.loading = true
+              this.$store.dispatch('action_loginByUserName',this.form)
+              .then(res => {
+                //   console.log(res)
+                  if(res.data.status === '1'){
+                      this.$message({
+                          type:'success',
+                          duration:1000,
+                          message:res.data.msg
+                      })
+                      //登录成功后
+                      console.log(api.getApiUrl())
+                      this.$router.push({ path: "/" });
+                      this.loading = false
+                  }else{
+                      this.$message({
+                          type:'error',
+                          duration:1000,
+                          message:res.data.msg
+                      })
+                      this.loading = false
+                  }
+              })
+              .catch(err => {
+                //   console.log('我运行了这里')
+                //   console.log(err)
+                 this.loading = false
+              })
             this.$router.push({ path: "/" });
           } else {
             // console.log('error submit!!');

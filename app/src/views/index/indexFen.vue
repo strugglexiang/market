@@ -143,6 +143,10 @@ export default {
        part(){
           return api.getPartName()
        },
+   },
+   mounted(){
+    //    console.log('首页已经加载')
+    //   console.log(this.$store)
    }
 }
 </script>

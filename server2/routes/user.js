@@ -98,19 +98,22 @@ router.post('/createWorker', function(req, res, next) {
     })
 });
 
-//修改资料
+//修改资料(老板修改)
 router.post('/updateUser',(req,res,err)=>{
-    // if(!req.body.id){
-    //     return res.json({
-    //         status:"0",
-    //         msg:"修改必需传入员工id"
-    //     })
-    // }
-    let params = {
-        _id:global.getUserInfo()['_id']
+    if(!req.body.id){
+        return res.json({
+            status:"0",
+            msg:"修改必需传入员工id"
+        })
     }
+    let params = {
+        // _id:global.getUserInfo()['_id']
+        _id:req.body.id
+    }
+    // console.log(params)
     let upobj = {}
     if(req.body.userName){
+        // console.log('我运行到这里没有出错1')
         if(global.delKong(req.body.userName).length){
             upobj.userName = global.delKong(req.body.userName)
         }else{
@@ -126,19 +129,13 @@ router.post('/updateUser',(req,res,err)=>{
     }
 
     if(req.body.sex){
-        if(global.delKong(req.body.sex).length){
-            upobj.sex = global.delKong(req.body.sex)
-        }else{
-            return res.json({
-                status:'0',
-                msg:'性别参数请不要传入空字符串'
-            })            
-        }
+        // console.log('我运行到这里没有出错2')
+        upobj.sex = req.body.sex
     }
-
     if(req.body.tel){
         if(global.delKong(req.body.tel).length){
             upobj.tel = global.delKong(req.body.tel)
+            console.log(upobj.tel)
         }else{
             return res.json({
                 status:'0',
@@ -287,14 +284,14 @@ router.get('/userInfo',(req,res,next) => {
 // 删除工作人员
 router.get('/delUser',(req,res,err) => {
     // console.log('我调用了这里')
-    // if(!req.query.id){
-    //      return res.json({
-    //          status:'0',
-    //          msg:"删除用户请传入id"
-    //      })
-    // }
+    if(!req.query.id){
+         return res.json({
+             status:'0',
+             msg:"删除用户请传入id"
+         })
+    }
     let params = {
-        _id:global.getUserInfo()['_id']
+        _id:req.query.id
     } 
     User.remove(params,(err) => {
         if(err){

@@ -19,7 +19,7 @@
                       <el-input 
                         class="search-input"  
                         v-model="input" 
-                        placeholder="关键字搜索"
+                        placeholder='按用户名或联系电话搜索'
                         clearable
                       >
                           <template slot="prepend">关键字</template>
@@ -37,13 +37,19 @@
                       <el-table-column prop="userName" label="用户名"  sortable>
                       </el-table-column>
                       <el-table-column prop="tel" label="性别"  >
-                      </el-table-column>   
+                          <template slot-scope="scope">
+                            <el-tag :type="scope.row.sex=== 1?'info':scope.row.sex==2?'success':'danger'">
+                              {{scope.row.sex=== 1?'男':scope.row.sex==2?'女':'未知'}}
+                            </el-tag>
+                          </template>                        
+                      </el-table-column>  
+                       <!-- 添加的时候是必选的  -->
                       <el-table-column prop="sex" label="联系电话"  sortable>
                       </el-table-column>                                            
                       <el-table-column label="操作" >
                         <template slot-scope="scope">
-                          <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)" >编辑</el-button>
-                          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" >删除</el-button>
+                          <el-button size="small" type="primary"  @click="handleEdit(scope.$index, scope.row)" >编辑</el-button>
+                          <el-button type="danger" size="small" v-if='scope.row.userName !== "hongshan"'  @click="handleDel(scope.$index, scope.row)" >删除</el-button>
                         </template> 
                       </el-table-column>
                 </el-table>  
@@ -66,6 +72,27 @@
           :visible.sync="showAddModal"
           width="50%"
       >
+          <el-form ref="addForm" :model="addForm" :rules='addRules' label-width="80px" label-position='right'>
+              <el-form-item label="用户名" prop="userName">
+                <el-input class ='modalInput' v-model="addForm.userName"></el-input>
+              </el-form-item> 
+              <el-form-item label="用户密码" prop="password">
+                <el-input class ='modalInput' v-model="addForm.password"></el-input>
+              </el-form-item>   
+              <el-form-item label=性别 prop="sex">
+                  <!-- <el-select v-model="addForm.sex" placeholder="请选择性别">
+                     <el-option label="男" value="1"></el-option>
+                     <el-option label="女" value="2"></el-option>
+                  </el-select> -->
+                  <el-radio-group v-model="addForm.sex">
+                    <el-radio :label="1" >男</el-radio>
+                    <el-radio :label="2" >女</el-radio>
+                  </el-radio-group>                  
+              </el-form-item>   
+              <el-form-item label="联系电话" prop="tel">
+                <el-input class ='modalInput' v-model="addForm.tel"></el-input>
+              </el-form-item>                                                      
+          </el-form>
           <span slot="footer" class="dialog-footer">
               <el-button @click="cancelAddModal">取 消</el-button>
               <el-button type="primary" @click="confirAddModal">确 定</el-button>
@@ -77,6 +104,27 @@
           :visible.sync="showEditModal"
           width="50%"
       >
+          <el-form ref="editForm" :model="editForm" :rules='addRules' label-width="120px" label-position='right'>
+              <el-form-item label="用户名" prop="userName">
+                <el-input class ='modalInput' v-model="editForm.userName"></el-input>
+              </el-form-item> 
+              <el-form-item label="用户密码(备选)" >
+                <el-input class ='modalInput' v-model="editForm.password"></el-input>
+              </el-form-item>   
+              <el-form-item label=性别 prop="sex">
+                  <!-- <el-select v-model="editForm.sex" placeholder="请选择性别">
+                     <el-option label="男" value="1"></el-option>
+                     <el-option label="女" value="2"></el-option>
+                  </el-select> -->
+                  <el-radio-group v-model="editForm.sex">
+                    <el-radio  :label='1 ' border >男</el-radio>
+                    <el-radio  :label="2" border >女</el-radio>
+                  </el-radio-group>                  
+              </el-form-item>   
+              <el-form-item label="联系电话" prop="tel">
+                <el-input class ='modalInput' v-model="editForm.tel"></el-input>
+              </el-form-item>                                                      
+          </el-form>     
           <span slot="footer" class="dialog-footer">
               <el-button @click="cancelEditModal">取 消</el-button>
               <el-button type="primary" @click="confirEditModal">确 定</el-button>
@@ -94,45 +142,76 @@ export default {
           listLoading:false,
           input:null,//关键字搜索
           //  ---- 表格相关
-          users:[
-            {
-              userName:'strugglexiang',
-              tel:'123',
-              sex:'男'
-            }
-          ],
+          users:[],
           listQuery:{
-                pageSize: 7,
+                pageSize: 5,
                 pageNo: 1
           },
           total:null,
           // ---- 模态框
           showAddModal:false,
           showEditModal:false,
+          addForm:{
+             userName:'',//
+             password:'',//
+             tel:'',
+             sex:'',
+          },
+          addRules:{
+             userName:[{ required: true, message: '用户名不能为空', trigger: 'blur'}],
+             password:[{ required: true, message: '用户密码不能为空', trigger: 'blur'}],
+             tel:[{ required: true, message: '联系电话不能为空', trigger: 'blur'}],
+             sex:[{ required: true, message: '性别不能为空', trigger: 'change'}],
+          },
+          editForm:{
+             userName:'',//
+             password:'',//
+             tel:'',
+             sex:'',
+          },
+          editRules:{
+             userName:[{ required: true, message: '用户名不能为空', trigger: 'blur'}],
+            //  password:[{ required: true, message: '用户密码不能为空', trigger: 'blur'}],
+             tel:[{ required: true, message: '联系电话不能为空', trigger: 'blur'}],
+             sex:[{ required: true, message: '性别不能为空', trigger: 'change'}],
+          },          
        }
     },
     methods:{
        //--------- 表格相关 ----------
        // 点击添加按钮 
        clickAdd(){
+          if(this.$refs['addForm']){
+             this.$refs['addForm'].resetFields()
+          }
           this.showAddModal = true
        },
       // 点击编辑按钮
       handleEdit(index, row) {
-        console.log('点击编辑按钮',row)
+        // console.log('点击编辑按钮',row)
+        this.editForm = {
+          ...row
+        }
+        this.editForm.id = row['_id']
+        this.editForm.password = null
+        // console.log(this.editForm)
         this.showEditModal = true
       },
       // 点击删除按钮
       handleDel(index, row){
         // console.log(row)
+          
           this.$confirm("确认删除用户吗?", "提示", {
             type: "warning"
           })
           .then(() => {
-             console.log('删除')
+            //  console.log('删除')
+              this.delUser({
+                id:row['_id']
+              })
           })
           .catch(() => {
-            console.log('取消删除')
+            // console.log('取消删除')
           })
             
       }, 
@@ -151,18 +230,38 @@ export default {
       //取消添加
       cancelAddModal(){
         this.showAddModal = false
+        this.$refs['addForm'].resetFields()
       },
       // 确认添加
       confirAddModal(){
-        this.showAddModal = false
+        // this.showAddModal = false
+        this.$refs['addForm'].validate((valid) => {
+          if (valid) {
+            // alert('submit!');
+            this.addUser(this.addForm)
+          } else {
+            // console.log('error submit!!');
+            return false;
+          }
+        });        
       },
       //取消编辑
       cancelEditModal(){
         this.showEditModal = false
+        this.$refs['editForm'].resetFields()
       },
       // 确认编辑
       confirEditModal(){
-        this.showEditModal = false
+        // this.showEditModal = false
+        this.$refs['editForm'].validate((valid) => {
+          if (valid) {
+            // alert('submit!');
+            this.updateUser(this.editForm)
+          } else {
+            // console.log('error submit!!');
+            return false;
+          }
+        });
       },      
     },
     watch:{
@@ -170,7 +269,7 @@ export default {
           if(!str.length){
               str = null
           }
-          this.listQuery.adverName =  str
+          this.listQuery.keyword =  str
           this.listQuery.pageNo = 1
           this.jieliu(this.queryUser,this.listQuery)
       }
@@ -188,6 +287,9 @@ export default {
 <style lang="scss" scoped>
 @mixin loyout {        
   max-width:900px;
+}
+.modalInput{
+  max-width: 250px;
 }
 //------------- 标题
 .title-box{

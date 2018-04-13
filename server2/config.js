@@ -33,6 +33,7 @@ function encrypt(pass){
 
 //消除空字符串
 function  delKong(str){
+    // console.log('我这里出错了?',str,typeof str)
     return str.replace(/\s/g,"")
 } 
 

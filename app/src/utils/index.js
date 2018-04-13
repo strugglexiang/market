@@ -35,7 +35,7 @@ service.interceptors.response.use(response => {
                 case '407':
                 Message({
                     message: res.msg,
-                    type: 'error',
+                    type: 'warning',
                     duration: 2 * 1000
                 })  //请求未携带token      
                 router.replace({
@@ -45,7 +45,7 @@ service.interceptors.response.use(response => {
                 case '406':
                 Message({
                     message: res.msg,
-                    type: 'error',
+                    type: 'warning',
                     duration: 2 * 1000
                 }) //token解析失败，通知后端管理人员检查 
                 router.replace({
@@ -55,7 +55,7 @@ service.interceptors.response.use(response => {
                 case '405':
                 Message({
                     message: res.msg,
-                    type: 'error',
+                    type: 'warning',
                     duration: 2 * 1000
                 }) //token失效,请重新登录  
                 router.replace({
@@ -66,6 +66,7 @@ service.interceptors.response.use(response => {
     return response
 } ,error => {
     // console.log('response拦截器错误' + error)// for debug
+    // console.log('token失效是运行这里吗')
     Message({
       message: error.message,
       type: 'error',

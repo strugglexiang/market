@@ -20,7 +20,7 @@ let getters = {
     },
     sideStatu(state){
         // console.log(state)
-        return state.home.sideStatu
+        return !state.home.sideStatu
     },
     visitedViews: state => state.tagsView.visitedViews,
     cachedViews: state => state.tagsView.cachedViews,    

@@ -7,6 +7,9 @@ let mongoUrl = 'mongodb://127.0.0.1:27017/zongmarket'
 //token加密秘钥
 let secret = 'jsonwebtokenStrugglexiang'
 
+// 部门信息
+let partMsg = 'hongshanpart'
+
 //整套api的权限对照表
 let compareAuth = []
 
@@ -55,6 +58,7 @@ function validateTotoken(req,res,next){
                   msg:'token失效,请重新登录'
               })
           }   
+        //   console.log('token解析结果',decoded)
           //token在有效期内，解析出该用户的权限，放入config维护的权限数组中
         //   console.log('token解析',decoded.iss)
              userInfo = decoded.iss
@@ -79,6 +83,7 @@ function validateTotoken(req,res,next){
 module.exports = {
     mongoUrl,//连接的数据库地址
     secret, //token加密秘钥
+    partMsg,//部门信息
     encrypt,//md5加密函数
     validateTotoken,//token验证中间件
     getcompareAuth,//整套api的权限对照表

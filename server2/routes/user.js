@@ -281,6 +281,58 @@ router.get('/userInfo',(req,res,next) => {
     })
 })
 
+//  自己修改自己资料,不需要传入id
+router.post('/ownUpuser',(req,res,next) => {
+    console.log('我运行了这里')
+    let params = {
+        _id:global.getUserInfo()['_id']
+    }
+    let upobj = {}
+    if(req.body.userName){
+        if(global.delKong(req.body.userName).length){
+            upobj.userName = global.delKong(req.body.userName)
+        }else{
+            return res.json({
+                status:'0',
+                msg:'姓名参数请不要传入空字符串'
+            })
+        }
+    }
+
+    if(req.body.password){
+        upobj.password = global.encrypt(req.body.password)
+    }
+
+    if(req.body.sex){
+        upobj.sex = req.body.sex
+    }
+
+    if(req.body.tel){
+        if(global.delKong(req.body.tel).length){
+            upobj.tel = global.delKong(req.body.tel)
+        }else{
+            return res.json({
+                status:'0',
+                msg:'联系电话参数请不要传入空字符串'
+            })            
+        }
+    }
+
+    User.update(params,upobj,(err,doc)=>{
+        if(err){
+            return res.json({
+                status:"0",
+                msg:err.message
+            })
+        }
+        return res.json({
+            status:"1",
+            msg:"自己修改个人资料成功",
+            result:doc
+        })
+    })    
+})
+
 // 删除工作人员
 router.get('/delUser',(req,res,err) => {
     // console.log('我调用了这里')

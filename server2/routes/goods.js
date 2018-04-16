@@ -84,13 +84,16 @@ router.get('/getGoods',(req,res,next) => {
                 },
             ]
         }  
-        Goods.count({},(err,count) => {
+        let count = 0
+        Goods.count(params,(err,doc) => {
             if(err){
                 return res.json({
                     status:'0',
-                    msg:err.message
+                    msg:err.message,
+                    result:'统计分页总数失败'
                 })
             }
+            count = doc
         })
         Goods
         .find(params)
@@ -116,7 +119,8 @@ router.get('/getGoods',(req,res,next) => {
                 count:count,
                 result:doc
             })
-        })        
+        })  
+      
     }else{
         Goods.count({},(err,doc) => {
             if(err){

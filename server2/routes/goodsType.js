@@ -53,41 +53,43 @@ router.get('/getGoodsType',(req,res,next) => {
         let params = {
             typeName:{$regex : reg}
         }   
-        GoodsType.count({},(err,count)=>{
+        let count = 0
+        GoodsType.count(params,(err,doc) => {
             if(err){
-                // console.log(err)
+                return res.josn({
+                    status:'0',
+                    msg:err.message,
+                    result:'统计分页总数事变'
+                })
+            }
+            count = doc
+        })
+        GoodsType
+        .find(params)
+        .limit(pageSize)
+        .skip(skip)
+        .exec((err,doc) => {
+            if(err){
+                // console.log('sss',err)
                 return res.json({
                     status:'0',
                     msg:err.message
                 })
             }
-            GoodsType
-            .find(params)
-            .limit(pageSize)
-            .skip(skip)
-            .exec((err,doc) => {
-                if(err){
-                    // console.log('sss',err)
-                    return res.json({
-                        status:'0',
-                        msg:err.message
-                    })
-                }
-                if(!doc.length){
-                    return res.json({
-                        status:'0',
-                        msg:'没有符合条件的选项',
-                        result:doc
-                    })
-                }
+            if(!doc.length){
                 return res.json({
-                    status:'1',
-                    msg:"查询商品类型成功",
-                    count:count,
+                    status:'0',
+                    msg:'没有符合条件的选项',
                     result:doc
                 })
+            }
+            return res.json({
+                status:'1',
+                msg:"查询商品类型成功",
+                count:count,
+                result:doc
             })
-        })  
+        })
     }else{
         GoodsType.count({},(err,count) => {
             if(err){

@@ -180,39 +180,42 @@ router.get('/getUsers',(req,res,next)=>{
                },
            ]
        }
-       User.count({},(err,count)=>{
+       let count = 0
+       User.count(params,(err,doc)=>{
+           if(err){
+               return res.json({
+                   status:'0',
+                   msg:err.message,
+                   result:'统计分页总数失败'
+               }) 
+           }
+           count = doc
+       })
+       User
+       .find(params)
+       .limit(pageSize)
+       .skip(skip)
+       .exec((err,doc)=>{
            if(err){
                return res.json({
                    status:'0',
                    msg:err.message
-               }) 
-           }
-           User
-           .find(params)
-           .limit(pageSize)
-           .skip(skip)
-           .exec((err,doc)=>{
-               if(err){
-                   return res.json({
-                       status:'0',
-                       msg:err.message
-                   })
-               }
-               if(!doc.length){
-                return res.json({
-                    status:'0',
-                    msg:'没有符合条件的选项',
-                    result:doc
-                }) 
-               }
-               return res.json({
-                   status:'1',
-                   msg:"查询用户信息成功",
-                   result:doc,
-                   count:count
                })
+           }
+           if(!doc.length){
+            return res.json({
+                status:'0',
+                msg:'没有符合条件的选项',
+                result:doc
+            }) 
+           }
+           return res.json({
+               status:'1',
+               msg:"查询用户信息成功",
+               result:doc,
+               count:count
            })
-       })
+       })       
     }else{
         User.count({},(err,count)=>{
             User

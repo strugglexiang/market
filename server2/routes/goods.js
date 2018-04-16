@@ -9,6 +9,7 @@ let global = require('../config')
  * 2.查询商品
  * 3.修改商品
  * 4.删除商品
+ * 5.图片上传功能
  */
 
 //---------- 添加商品
@@ -253,6 +254,11 @@ router.get('/delGoods',(req,res,next) => {
             msg:'删除成功'
         })        
     })
+})
+
+// ---- 图片上传功能
+router.post('/upload',(req,res,next) => {
+    
 })
 
 module.exports = router

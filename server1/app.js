@@ -11,6 +11,9 @@ var global = require('./config')
 
 var app = express();
 
+// 静态资源管理，商品图片上传路径
+app.use('/upload',express.static('./upload'))
+
 //使用中间件
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -25,10 +28,10 @@ app.all('*', function(req, res, next) {
 });
 
 app.use((req,res,next) => {
-    if(req.originalUrl !== '/user/login' ){
-        global.validateTotoken(req,res,next)
-    }else{
+    if(req.originalUrl === '/user/login' || req.originalUrl.includes('/upload') ){
         next();
+    }else{
+        global.validateTotoken(req,res,next)
     }
 })
 // app.use(global.validateTotoken)

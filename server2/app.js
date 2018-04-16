@@ -31,8 +31,9 @@ app.all('*', function(req, res, next) {
 
 // token验证 
 app.use((req,res,next) => {
-    console.log(req.originalUrl,req.originalUrl.includes('/upload'))
-    if(req.originalUrl === '/user/login' || req.originalUrl.includes('/upload')){
+    // console.log(req.originalUrl,req.originalUrl.includes('/upload'))
+    // || req.originalUrl === '/goods/upload'
+    if(req.originalUrl === '/user/login' || req.originalUrl.includes('/upload') ){
         next();
     }else{
         global.validateTotoken(req,res,next)

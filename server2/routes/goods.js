@@ -2,6 +2,9 @@ let expresss = require('express')
 let router = expresss.Router()
 let Goods = require('../models/goods')
 let global = require('../config')
+//图片处理插件
+let multiparty = require('multiparty')
+let fs = require('fs');
 
 /**
  * 目录
@@ -258,7 +261,47 @@ router.get('/delGoods',(req,res,next) => {
 
 // ---- 图片上传功能
 router.post('/upload',(req,res,next) => {
-    
+    // --- 1 生成mulparty对象
+    let form = new multiparty.Form()
+    //--- 2 配置上传图片的路径
+    form.uploadDir = './upload'
+    // --- 3 上传完成后处理
+    form.parse(req,(err,fields,files) => {
+        if(err){
+            return res.json({
+                status:'0',
+                msg:err,
+                result:'上传图片处理失败'
+            })
+        }
+        //获取提交的数据以及图片上传成功返回的图片信息  
+        // console.log('表单数据',fields);  // 获取表单的数据  
+        // console.log('图片上传成功返回的信息',files);  // 图片上传成功返回的信息     
+
+        let inputFile = files.fileUpload[0];
+        let oldPath = inputFile.path;
+        let newPath = './upload/img/' + inputFile.originalFilename;
+        // console.log(oldPath,newPath)
+        //重命名为真实文件名
+        fs.rename(oldPath, newPath, function(err) {
+          if(err){
+            return res.json({
+                status:'0',
+                msg:err,
+                some:'图片上传成功，重命名失败',
+                result:oldPath
+            })
+          } else {
+            return res.json({
+                status:'0',
+                msg:err,
+                some:'图片上传成功，重命名成功',
+                result:newPath.slice(1)
+            })
+          }
+        });
+    })
+
 })
 
 module.exports = router

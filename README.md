@@ -20,6 +20,7 @@
 - [12-解决打包问题](#12-解决打包问题)
 - [13-有关系统安全性的考虑](#13-有关系统安全性的考虑)
 - [14-后台api分页经验](#14-后台api分页经验)
+- [15-图片传功能](#15-图片传功能)
 
 
 ### 1-项目结构搭建
@@ -277,4 +278,56 @@ model
 1.根据我自己Postman测试接口，正确的顺序应该要这么写
 find > sort > limit > skip
 2.这里有个问题，那就是统计数目的时候要在find后统计，不能在最开始统计
+```
+
+### 15-图片传功能
+参考链接：
+>https://www.cnblogs.com/kongxianghai/archive/2015/02/15/4293139.html
+
+>https://blog.csdn.net/z_alvin/article/details/78796088
+
+>html上传文件的写法:https://www.cnblogs.com/ys-wuhan/p/5834268.html
+
+1. 安装multiparty插件
+> npm i -S multiparty
+2. 引入
+> let multiparty = requrie('multiparty')
+3. 处理
+```
+1.生成mulparty对象
+let form = new multiparty.Form()
+2.配置上传图片的路径
+form.uploadDir = './upload'
+3 对上传数据处理
+```
+ form.parse(req, (err,fields,files) => {
+     //fields 是获取的表单数据，因为你提交的表单有可能有除了图片以外的数据
+     //files  图片上传成功后返回的信息
+     //flles 是个对象，flles.fileUpload是个数组，记录了上传的文件（可能有多个）
+     let inputFile = files.fileUpload[0];
+     //这个时候已经上传成功了，图片在第二步配置的路径里面
+     //然后可以利用node.js的fs模块对文件移动位置和重命名
+        let inputFile = files.fileUpload[0];
+        let oldPath = inputFile.path;
+        let newPath = './upload/img/' + inputFile.originalFilename;
+        // console.log(oldPath,newPath)
+        //重命名为真实文件名
+        fs.rename(oldPath, newPath, function(err) {
+          if(err){
+            return res.json({
+                status:'0',
+                msg:err,
+                some:'图片上传成功，重命名失败',
+                result:oldPath
+            })
+          } else {
+            return res.json({
+                status:'0',
+                msg:err,
+                some:'图片上传成功，重命名成功',
+                result:newPath.slice(1)
+            })
+          }
+        });     
+ })
 ```

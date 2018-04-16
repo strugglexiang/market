@@ -9,6 +9,7 @@ export default {
     methods:{
         queryGoodsType(obj){
             // console.log(obj)
+            this.listLoading = true
             getGoodsTypeAjax(obj)
             .then(res => {
                 // console.log(res)
@@ -30,7 +31,7 @@ export default {
                         duration:2000,
                         message:res.data.msg
                     })
-                    this.goods = res.data.result
+                    this.goodsType = res.data.result
                     this.total = res.data.count
                     this.listLoading = false
                 }

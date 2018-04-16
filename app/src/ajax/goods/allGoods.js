@@ -4,7 +4,7 @@ import api from '@/api'
 // 获取所有商品
 export function  getGoodsAjax(query) {
     return send({
-      url: api.getApiUrl() + '/goods/addGoods',
+      url: api.getApiUrl() + '/goods/getGoods',
       method: 'get',
       params: query
     })
@@ -13,7 +13,7 @@ export function  getGoodsAjax(query) {
 //添加商品
 export function  addGoodsAjax(query) {
     return send({
-      url: api.getApiUrl() + '/goods/getGoods',
+      url: api.getApiUrl() + '/goods/addGoods',
       method: 'post',
       data: query
     })

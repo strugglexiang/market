@@ -308,7 +308,7 @@ form.uploadDir = './upload'
      let inputFile = files.fileUpload[0];
      //这个时候已经上传成功了，图片在第二步配置的路径里面
      //然后可以利用node.js的fs模块对文件移动位置和重命名
-        let inputFile = files.fileUpload[0];
+        let inputFile = files.fileUpload[0]; //一定要注意这个 'fileUpload' 是input框的name值
         let oldPath = inputFile.path;
         let newPath = './upload/img/' + inputFile.originalFilename;
         // console.log(oldPath,newPath)

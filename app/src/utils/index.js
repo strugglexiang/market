@@ -25,7 +25,7 @@ service.interceptors.request.use(config => {
 //res拦截器
 service.interceptors.response.use(response => {
     let res = response.data
-    // console.log('resposeDate', res)
+    // console.log('我拦截了', res)
             // Message({
             //     message: res.msg,
             //     type: 'error',
@@ -65,7 +65,7 @@ service.interceptors.response.use(response => {
             }
     return response
 } ,error => {
-    // console.log('response拦截器错误' + error)// for debug
+    console.log('response拦截器错误' + error)// for debug
     // console.log('token失效是运行这里吗')
     Message({
       message: error.message,

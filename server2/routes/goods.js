@@ -100,7 +100,7 @@ router.get('/getGoods',(req,res,next) => {
                     result:'统计分页总数失败'
                 })
             }
-            // console.log(doc)
+            // console.log('统计数量',doc)
             count = doc
         })
         Goods
@@ -138,6 +138,7 @@ router.get('/getGoods',(req,res,next) => {
                     result:'统计分页总数错误'
                 })
             }
+            // console.log('统计数量',doc)
             count = doc
         })
         Goods
@@ -281,10 +282,10 @@ router.post('/upload',(req,res,next) => {
             })
         }
         //获取提交的数据以及图片上传成功返回的图片信息  
-        // console.log('表单数据',fields);  // 获取表单的数据  
-        // console.log('图片上传成功返回的信息',files);  // 图片上传成功返回的信息     
+        console.log('表单数据',fields);  // 获取表单的数据  
+        console.log('图片上传成功返回的信息',files);  // 图片上传成功返回的信息     
 
-        let inputFile = files.fileUpload[0];
+        let inputFile = files.file[0];
         let oldPath = inputFile.path;
         let newPath = './upload/img/' + inputFile.originalFilename;
         // console.log(oldPath,newPath)

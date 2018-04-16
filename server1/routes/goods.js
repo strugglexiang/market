@@ -284,7 +284,7 @@ router.post('/upload',(req,res,next) => {
         // console.log('表单数据',fields);  // 获取表单的数据  
         // console.log('图片上传成功返回的信息',files);  // 图片上传成功返回的信息     
 
-        let inputFile = files.fileUpload[0];
+        let inputFile = files.file[0];
         let oldPath = inputFile.path;
         let newPath = './upload/img/' + inputFile.originalFilename;
         // console.log(oldPath,newPath)

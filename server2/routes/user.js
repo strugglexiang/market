@@ -51,7 +51,7 @@ router.post('/login', function(req, res, next) {
          }
          //登录成功过后生成token
         //  console.log('登录成功',doc)
-         let expires = moment().add(20,'minutes').valueOf();
+         let expires = moment().add(1,'minutes').valueOf();
          let token = jwt.encode({
            iss: doc,
            exp: expires

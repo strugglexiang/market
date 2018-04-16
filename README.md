@@ -299,7 +299,6 @@ let form = new multiparty.Form()
 2.配置上传图片的路径
 form.uploadDir = './upload'
 3 对上传数据处理
-```
  form.parse(req, (err,fields,files) => {
      //fields 是获取的表单数据，因为你提交的表单有可能有除了图片以外的数据
      //files  图片上传成功后返回的信息

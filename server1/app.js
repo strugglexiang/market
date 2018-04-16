@@ -6,6 +6,8 @@ var logger = require('morgan');
 var bodyParser = require('body-parser')
 //引入路由
 var user = require('./routes/user');
+var goodsType = require('./routes/goodsType');
+var goods = require('./routes/goods');
 //导入全局变量
 var global = require('./config')
 
@@ -38,6 +40,7 @@ app.use((req,res,next) => {
 
 //使用路由
 app.use('/user', user);
-
+app.use('/goodsType', goodsType);
+app.use('/goods', goods);
 
 module.exports = app;

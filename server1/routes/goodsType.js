@@ -31,7 +31,7 @@ router.post('/addGoodsType',(req,res,next) => {
             })
         }
         return res.json({
-            status:'0',
+            status:'1',
             msg:'添加类型成功',
             result:doc
         })

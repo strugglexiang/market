@@ -33,13 +33,14 @@
         <el-col :span="24">
             <!-- 表格 -->
             <div class="table-box">
-                <el-table :data="users" v-loading="listLoading" element-loading-text="拼命加载中" >
-                      <el-table-column prop="userName" label="用户名"  sortable>
-                      </el-table-column>
-                      <el-table-column prop="tel" label="性别"  >
-                      </el-table-column>   
-                      <el-table-column prop="sex" label="联系电话"  sortable>
-                      </el-table-column>                                            
+                <el-table :data="goodsType" v-loading="listLoading" element-loading-text="拼命加载中" >
+                      <el-table-column prop="typeName" label="用户名"  sortable>
+                          <template slot-scope="scope">
+                            <el-tag type="">
+                              {{scope.row.typeName}}
+                            </el-tag>
+                          </template>                         
+                      </el-table-column>                                     
                       <el-table-column label="操作" >
                         <template slot-scope="scope">
                           <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)" >编辑</el-button>
@@ -66,6 +67,11 @@
           :visible.sync="showAddModal"
           width="50%"
       >
+          <el-form ref="addForm" :model="addForm" :rules='addRules' label-width="80px" label-position='right'>
+              <el-form-item label="类型名" prop="typeName">
+                <el-input class ='modalInput' v-model="addForm.typeName"></el-input>
+              </el-form-item>                                                    
+          </el-form>      
           <span slot="footer" class="dialog-footer">
               <el-button @click="cancelAddModal">取 消</el-button>
               <el-button type="primary" @click="confirAddModal">确 定</el-button>
@@ -77,6 +83,11 @@
           :visible.sync="showEditModal"
           width="50%"
       >
+          <el-form ref="editForm" :model="editForm" :rules='editRules' label-width="80px" label-position='right'>
+              <el-form-item label="类型名" prop="typeName">
+                <el-input class ='modalInput' v-model="editForm.typeName"></el-input>
+              </el-form-item>                                                    
+          </el-form>       
           <span slot="footer" class="dialog-footer">
               <el-button @click="cancelEditModal">取 消</el-button>
               <el-button type="primary" @click="confirEditModal">确 定</el-button>
@@ -94,33 +105,46 @@ export default {
           listLoading:false,
           input:null,//关键字搜索
           //  ---- 表格相关
-          users:[
-            {
-              userName:'strugglexiang',
-              tel:'123',
-              sex:'男'
-            }
-          ],
+          goodsType:[],
           listQuery:{
-                pageSize: 7,
+                pageSize: 5,
                 pageNo: 1
           },
           total:null,
           // ---- 模态框
           showAddModal:false,
           showEditModal:false,
+          addForm:{
+             typeName:'',//
+          },
+          addRules:{
+             typeName:[{ required: true, message: '用户名不能为空', trigger: 'blur'}],
+          },
+          editForm:{
+             typeName:'',//
+          },
+          editRules:{
+             typeName:[{ required: true, message: '用户名不能为空', trigger: 'blur'}],
+          },           
        }
     },
     methods:{
        //--------- 表格相关 ----------
        // 点击添加按钮 
        clickAdd(){
+          if(this.$refs['addForm']){
+             this.$refs['addForm'].resetFields()
+          }         
           this.showAddModal = true
        },
       // 点击编辑按钮
       handleEdit(index, row) {
-        console.log('点击编辑按钮',row)
-        this.showEditModal = true
+        // console.log('点击编辑按钮',row)
+        this.editForm = {
+          ...row
+        }
+        this.editForm.id = row['_id']
+        this.showEditModal = true        
       },
       // 点击删除按钮
       handleDel(index, row){
@@ -129,10 +153,13 @@ export default {
             type: "warning"
           })
           .then(() => {
-             console.log('删除')
+            //  console.log('删除')
+              this.delGoodsType({
+                id:row['_id']
+              })             
           })
           .catch(() => {
-            console.log('取消删除')
+            // console.log('取消删除')
           })
             
       }, 
@@ -140,29 +167,49 @@ export default {
       // 每页数量改变
       handleSizeChange(val) {
         this.listQuery.pageSize = val;
-        this.queryUser(this.listQuery)
+        this.queryGoodsType(this.listQuery)
       },
       // 页数改变
       handleCurrentChange(val) {
         this.listQuery.pageNo = val;
-        this.queryUser(this.listQuery)
+        this.queryGoodsType(this.listQuery)
       },      
       // --------- 模态框相关 --------
       //取消添加
       cancelAddModal(){
         this.showAddModal = false
+        this.$refs['addForm'].resetFields()
       },
       // 确认添加
       confirAddModal(){
         this.showAddModal = false
+        this.$refs['addForm'].validate((valid) => {
+          if (valid) {
+            // alert('submit!');
+            this.addGoodsType(this.addForm)
+          } else {
+            // console.log('error submit!!');
+            return false;
+          }
+        });  
       },
       //取消编辑
       cancelEditModal(){
         this.showEditModal = false
+        this.$refs['editForm'].resetFields()
       },
       // 确认编辑
       confirEditModal(){
-        this.showEditModal = false
+        // this.showEditModal = false
+        this.$refs['editForm'].validate((valid) => {
+          if (valid) {
+            // alert('submit!');
+            this.updateGoodsType(this.editForm)
+          } else {
+            // console.log('error submit!!');
+            return false;
+          }
+        });        
       },      
     },
     watch:{
@@ -170,13 +217,13 @@ export default {
           if(!str.length){
               str = null
           }
-          this.listQuery.adverName =  str
+          this.listQuery.keyword =  str
           this.listQuery.pageNo = 1
-          this.jieliu(this.queryUser,this.listQuery)
+          this.jieliu(this.queryGoodsType,this.listQuery)
       }
    }, 
    mounted(){
-     this.queryUser(this.listQuery)
+     this.queryGoodsType(this.listQuery)
    }
 }
 </script>
@@ -187,7 +234,10 @@ export default {
 
 <style lang="scss" scoped>
 @mixin loyout {        
-  max-width:900px;
+  max-width:600px;
+}
+.modalInput{
+  max-width: 250px;
 }
 //------------- 标题
 .title-box{
@@ -203,7 +253,8 @@ export default {
 
 // ---------- 搜索框和添加
 .nav-box{
-  @include loyout
+  @include loyout;
+  overflow: hidden;
 }
 // 添加按钮
 .bt-box{
@@ -218,17 +269,18 @@ export default {
 }
 .search-input{
   width:270px;
-  margin:15px 0px 10px 20px;
+  margin:15px 0px 10px 60px;
 }
 // ----------- 表格
 .table-box{
   border:1px solid #ccc;
-  margin:0px 20px 20px 20px;  
+  margin:0px 20px 20px 60px;  
   @include loyout
 }
 //  -------- 分页
 .page-box{
-   margin-left:10px;
+   margin-left:60px;
+   margin-bottom: 35px;
 }
 
 

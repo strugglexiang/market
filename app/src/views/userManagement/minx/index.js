@@ -17,7 +17,7 @@ export default {
                 if(res.data.status === '1'){
                     // this.$message({
                     //     type:'success',
-                    //     duration:2000,
+                    //     duration:1000,
                     //     message:res.data.msg
                     // })  
                     // console.log(res.data.result)  
@@ -29,7 +29,7 @@ export default {
                 }else{
                     this.$message({
                         type:'error',
-                        duration:2000,
+                        duration:1000,
                         message:res.data.msg
                     })
                     this.users = res.data.result
@@ -51,10 +51,12 @@ export default {
                 if(res.data.status === '1'){
                     this.$message({
                         type:'success',
-                        duration:2000,
+                        duration:1000,
                         message:res.data.msg
                     })
                     this.showAddModal = false
+                    // console.log('添加成功后这里执行')
+                    // this.listQuery.pageNo = 1 
                     this.queryUser(this.listQuery)
                 }else{
                     this.$message({
@@ -77,15 +79,16 @@ export default {
                 if(res.data.status === '1'){
                     this.$message({
                         type:'success',
-                        duration:2000,
+                        duration:1000,
                         message:res.data.msg
                     })
                     this.showEditModal = false
+                    // this.listQuery.pageNo = 1
                     this.queryUser(this.listQuery)
                 }else{
                     this.$message({
                         type:'error',
-                        duration:2000,
+                        duration:1000,
                         message:res.data.msg
                     })
                 }
@@ -103,14 +106,15 @@ export default {
                 if(res.data.status === '1'){
                     this.$message({
                         type:'success',
-                        duration:2000,
+                        duration:1000,
                         message:res.data.msg
                     })  
+                    this.listQuery.pageNo = 1
                     this.queryUser(this.listQuery)                 
                 }else{
                     this.$message({
                         type:'error',
-                        duration:2000,
+                        duration:1000,
                         message:res.data.msg
                     })
                 }

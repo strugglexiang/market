@@ -223,6 +223,7 @@ export default {
       },
       // 页数改变
       handleCurrentChange(val) {
+        // console.log('页数改变了我要执行')
         this.listQuery.pageNo = val;
         this.queryUser(this.listQuery)
       },      
@@ -320,17 +321,17 @@ export default {
 }
 .search-input{
   width:270px;
-  margin:15px 0px 10px 20px;
+  margin:15px 0px 10px 40px;
 }
 // ----------- 表格
 .table-box{
   border:1px solid #ccc;
-  margin:0px 20px 20px 20px;  
+  margin:0px 20px 20px 40px;  
   @include loyout
 }
 //  -------- 分页
 .page-box{
-   margin-left:10px;
+   margin-left:40px;
 }
 
 

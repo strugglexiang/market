@@ -21,6 +21,8 @@
 - [13-有关系统安全性的考虑](#13-有关系统安全性的考虑)
 - [14-后台api分页经验](#14-后台api分页经验)
 - [15-图片传功能](#15-图片传功能)
+- [16-axions请求为什么会发送两次](#16-axions请求为什么会发送两次)
+- [17-饿了么表单的一个bug](#17-饿了么表单的一个bug)
 
 
 ### 1-项目结构搭建
@@ -330,3 +332,84 @@ form.uploadDir = './upload'
         });     
  })
 ```
+
+
+### 16-axions请求为什么会发送两次
+>https://www.cnblogs.com/Upton/p/6183804.html
+>
+>https://www.tuicool.com/articles/3UBzIbb
+
+OPTIONS 方法比较少见，该方法用于请求服务器告知其支持哪些其他的功能和方法。通过 OPTIONS 方法，可以询问服务器具体支持哪些方法，或者服务器会使用什么样的方法来处理一些特殊资源。可以说这是一个探测性的方法，客户端通过该方法可以在不访问服务器上实际资源的情况下就知道处理该资源的最优方式。
+
+既然比较少见，什么情况下会使用这个方法呢？
+
+最近在做跨域文件上传的时候，浏览器会自动发起一个 OPTIONS 方法到服务器。
+
+如果只是普通的 ajax 请求，也不会发起这个请求，只有当 ajax 请求绑定了 upload 的事件并且跨域的时候，就会自动发起这个请求。
+
+```
+var xhr = new XMLHttpRequest();
+var url = 'http://api.xxx.com/upload';
+xhr.open('POST', url);
+xhr.upload.addEventListener('progress', function (){
+	// ...
+}, false);
+xhr.upload.addEventListener('load', function (){
+	// ...
+}, false);
+xhr.upload.addEventListener('error', function (){
+	// ...
+}, false);
+xhr.upload.addEventListener('abort',function (){
+	// ...
+}, false);
+xhr.send(data);
+```
+上面的代码是在 xxx.com 域下发起了一个跨域的 POST 请求，期望提交数据到 api.xxx.com 这个域名的服务器，同时在提交数据的时候希望能监测到文件上传的实时进度。
+
+自动发起的 OPTIONS 请求，其请求头包含了的一些关键性字段：
+```
+OPTIONS /upload HTTP/1.1
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: accept, content-type
+Origin: http://xxx.com
+```
+
+在这种场景下，客户端发起的这个 OPTIONS 可以说是一个“预请求”，用于探测后续真正需要发起的跨域 POST 请求对于服务器来说是否是安全可接受的，因为跨域提交数据对于服务器来说可能存在很大的安全问题。
+
+请求头 Access-Control-Request-Method 用于提醒服务器在接下来的请求中将会使用什么样的方法来发起请求。
+
+那么在服务端应该如何处理这个 OPTIONS 请求呢？
+
+这里以 node.js 服务器的 Koa 框架为例。在服务端会增加一个 OPTIONS 方法的 /upload 路由来处理客户端的这个请求。
+
+Koa 中使用了一个比较受欢迎的 koa-router 中间件来处理路由，但是该中间件对 OPTIONS 方法默认的处理方式会有点问题。因为在响应上面的 OPTIONS 请求时，需要添加上用于访问控制的响应头。
+
+响应头中关键性的字段：
+
+```
+Access-Control-Allow-Method: POST
+Access-Control-Allow-Origin: http://xxx.com
+```
+
+Access-Control-Allow-Method 和 Access-Control-Allow-Origin 分别告知客户端，服务器允许客户端用于跨域的方法和域名。
+
+node.js 的路由代码会是这样的：
+
+```
+router.options('/upload', function* (){
+    this.set('Access-Control-Allow-Method', 'POST');
+    this.set('Access-Control-Allow-Origin', 'http://xxx.com');
+    this.status = 204;
+});
+```
+
+关于 204 状态码的意义我经常会在面试的时候问起，这里就是一个实际应用的例子 ^_^
+
+好了，OPTIONS 的请求处理完了，剩下的 POST 请求就简单了，只需在响应头中添加一条和 OPTIONS 一致的允许跨域的域名即可，这里就不重复粘贴代码了。
+
+
+### 17-饿了么表单的一个bug
+分页器页码剪一后，再添加一个总数导致页数多一页的时候，点击多出的页码，不会触发事件，
+要回点之前的页码，再点增加的页码
+强迫症会有些受不了，有大佬会的可不可以教教我

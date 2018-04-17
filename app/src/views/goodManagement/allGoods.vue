@@ -418,6 +418,7 @@ export default {
 //  -------- 分页
 .page-box{
    margin-left:40px;
+   margin-bottom: 35px;
 }
 
 //--------- 上传

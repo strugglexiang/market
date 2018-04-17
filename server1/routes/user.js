@@ -13,7 +13,9 @@ let jwt = require('jwt-simple')
  * 修改资料
  * 查看用户(有分页操作)
  * 获取用户资料
+ * 自己修改自己资料
  * 删除工作人员
+ * 检测密码
  */
 
 //用户登录
@@ -363,6 +365,31 @@ router.get('/delUser',(req,res,err) => {
     })
 })
 
+
+// 检测密码
+// global.getUserInfo()
+router.get('/checkPwd',(req,res,next) => {
+    let keyword = req.query.keyword
+    // console.log(keyword,keyword.length)
+    if(!keyword.length){
+        return res.json({
+            status:'0',
+            msg:'检测密码请传入对比数据'
+        })
+    }
+    let dbpassword = global.getUserInfo().password
+    if(dbpassword !== global.encrypt(keyword)){
+        return res.json({
+            status:'0',
+            msg:'旧密码验证不正确'
+        })
+    }else{
+        return res.json({
+            status:'1',
+            msg:'旧密码验证成功'
+        })
+    }
+})
 // return res.json({
 //     status:'',
 //     msg:''

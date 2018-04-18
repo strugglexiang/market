@@ -15,6 +15,9 @@ let getters = {
     personAu(state){
         return state.user.addRouters
     },//生成的有权限的路由的表
+    allRoutes(state){
+        return state.user.routers
+    },
     token(state){
         return state.user.token
     },

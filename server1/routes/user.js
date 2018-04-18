@@ -82,6 +82,7 @@ router.post('/createWorker', function(req, res, next) {
         password:global.encrypt(req.body.password),
         sex:req.body.sex,
         tel:req.body.tel,
+        authority:global.getBaseAuthority()
     }
     let newWorker = new User(params)
     newWorker.save((err,doc) => {

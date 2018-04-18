@@ -25,7 +25,7 @@
 - [17-饿了么的bug](#17-饿了么的bug)
 - [18-后台怎么主动抛出错误好让axios拦截](#18-后台怎么主动抛出错误好让axios拦截)
 - [19-有关权限模块的思考](#19-有关权限模块的思考)
-
+- [20-router.beforeEach出现死循环](#20-router.beforeEach出现死循环)
 
 ### 1-项目结构搭建
 1. 使用官方脚手架vue-cli搭建目录结构
@@ -529,4 +529,27 @@ app.use((req,res,next) => {
         global.avalidateAuthority(req,res,next)
     }
 })
+```
+
+### 20-router.beforeEach出现死循环
+在写router.beforeEach的时候出现了死循环，检查了很久发现是因为用了
+> next({ ...to, replace: true })
+
+查询资料，了解到原理
+```
+next()直接跳转到to.path路径，没有再执行一遍beforeEach导航钩子，next('/')或者next('/login')自己指定路径的，路由跳转的时候还执行一遍beforeEach导航钩子，所以上面出现死循环；
+栗子：如我们登录页（'/login'）面进入首页('/')，可以这么写：
+router.beforeEach((to, from, next) => {
+  var userInfo= JSON.parse(sessionStorage.getItem('userInfoStorage'));//获取浏览器缓存的用户信息
+  if(userInfo){//如果有就直接到首页咯
+    next();
+  }else{
+    if(to.path=='/login'){//如果是登录页面路径，就直接next()
+      next();
+    }else{//不然就跳转到登录；
+      next('/login');
+    }
+
+  }
+});
 ```

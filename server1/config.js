@@ -46,33 +46,33 @@ function analyzeAuthority(auArray){
         //首页
         if(item.auCode === 0){
             //接口暂代开发,先连接一个空数组
-            temp.concat([])
+            temp = temp.concat([])
         }
         //登陆
         if(item.auCode === 1){
-            temp.concat([1,2])
+            temp = temp.concat([1,2])
         }
         //用户管理
         if(item.auCode === 2){
-            temp.concat([3,4,5,8])
+            temp = temp.concat([3,4,5,8])
         }
         //商品管理
         if(item.auCode === 3){
             //接口暂代开发,先连接一个空数组
-            temp.concat([10,11,12,13,14,15,16,17,18])
+            temp = temp.concat([10,11,12,13,14,15,16,17,18])
         }
         //货单管理
         if(item.auCode === 4){
             //接口暂代开发,先连接一个空数组
-            temp.concat([])
+            temp = temp.concat([])
         }
         //权限管理
         if(item.auCode === 5){
-            temp.concat([])
+            temp = temp.concat([])
         }
         //个人设置
         if(item.auCode === 6){
-            temp.concat([6,7,9])
+            temp = temp.concat([6,7,9])
         }
     })
     return temp 
@@ -149,7 +149,7 @@ function avalidateAuthority(req,res,next){
     // console.log(req.originalUrl)
     // console.log(req.apiCode)
     let currentCode = null
-    switch(req.body.originalUrl){
+    switch(req.originalUrl){
         case '/user/login':
           currentCode = 1
           break;

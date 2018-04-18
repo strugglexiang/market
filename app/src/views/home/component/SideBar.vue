@@ -48,10 +48,23 @@
 export default {
    data(){
        return {
-          route:[]
+        //   route:[]
        }
    },
    methods:{
+   },
+   computed: {
+       route(){
+        //    console.log(this.$store.getters.allRoutes)
+           let temp = this.$store.getters.allRoutes.filter((item,index,array) => {
+               if(item.name !== '登陆' && item.name !== '主页'){
+                 return true
+               }
+           })
+           temp = temp.concat(temp.shift())
+        //    console.log(temp)
+           return temp
+       }
    },
    props:{
         isCollapse: {
@@ -61,11 +74,11 @@ export default {
    },
    mounted () {
     //    console.log(this.$router.options.routes)
-       this.route = this.$router.options.routes.filter((item,index,array) => {
-             if(item.name !== '登陆' && item.name !== '主页'){
-                 return true
-             }  
-       })
+    //    this.route = this.$router.options.routes.filter((item,index,array) => {
+    //          if(item.name !== '登陆' && item.name !== '主页'){
+    //              return true
+    //          }  
+    //    })
     //    console.log(this.route)
     //    console.log(this.isCollapse)
    }

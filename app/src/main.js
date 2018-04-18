@@ -20,27 +20,40 @@ import '@/assets/css/reset.css'
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 
-
 router.beforeEach((to, from, next) => {
+    //  console.log('我触发了',to.path,to)
      if(to.path === '/login'){
        sessionStorage.removeItem('token')
        next()
      }else{
        let token = sessionStorage.getItem('token')
        if(token){
-          //  if(store.getters.personAu.length === 0){
-          //     // console.log('我运行到了这里')
-          //     store.dispatch('action_getUserInfo',sessionStorage.getItem('id'))
-          //     .then(res => {
-          //         store.dispatch('action_generateRoutes', res).then(() => { // 生成可访问的路由表
-          //           router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
-          //           // next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
-          //         })
-          //     })
-          //  }else{
-          //    next()
-          //  }
-          next()
+           if(store.getters.personAu.length === 0){
+              // console.log('我运行到了这里',store.getters.personAu.length)
+              store.dispatch('action_getUserInfo')
+              .then(res => {
+                  store.dispatch('action_generateRoutes', res).then(() => { // 生成可访问的路由表
+                    // console.log('我运行到这里出了错',res)
+                    // console.log(store.getters.personAu)
+                    // console.log(store.state.user.addRouters)
+                    // console.log('用户手动刷新我还增加动态路由',store.getters.personAu.length)
+                    router.addRoutes(store.getters.personAu) // 动态添加可访问路由表
+                    next()
+                    // console.log('我运行到这里出了错')
+                    // next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+                  })
+              })
+              .catch(error => {
+                   this.$message({
+                   type:'error',
+                   message:res.data.msg,
+                   duration:1000
+                 })
+              })
+           }else{
+             next()
+           }
+          // next()
        }else{
           // console.log('我运行了这里')       
           next({

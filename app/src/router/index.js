@@ -34,102 +34,18 @@ let routes = [
     component: Login
   },
   {
-    path: '/',
+    path: '',
     component: Home,
+    redirect: '/',
     name:"主页",
     children: [
        {
-         path:'',
+         path:'/',
          component:IndexFen,
          name:'首页'//二级路由默认展示首页
        },
     ]
-  },  
-  //
-  {
-    path: '/',
-    component: Home,
-    name:"用户管理",
-    icon:'el-icon-rank',
-    // hidden:true,
-    children: [
-       {
-         path:'/userMangement',
-         icon:'fa fa-globe',
-         component:allUsers,
-         name:'所有用户'
-       },
-    ]
-  },
-  {
-    path: '/',
-    component: Home,
-    name:'商品管理',
-    icon:'el-icon-sold-out',
-    children: [
-       {
-         path:'/goodMangement',
-         component:allGoods,
-         icon:'fa fa-gift',     
-         name:'所有商品'
-       },
-       {
-        path:'/goodType',
-        component:goodType,
-        icon:'fa fa-lightbulb-o',     
-        name:'商品类型'
-      },       
-    ]
-  }, 
-  {
-    path: '/',
-    component: Home,
-    name:'进货管理',
-    icon:'el-icon-sold-out',
-    children: [
-       {
-         path:'/purchaseMangement',
-         component:allPurchases,
-         icon:'fa fa-snowflake-o',     
-         name:'所有货单'
-       },
-    ]
   },   
-  {
-    path: '/',
-    component: Home,
-    name:'订单管理',
-    icon:'el-icon-star-on',
-    children: [
-       {
-         path:'/orderMangement',
-         component:allOrder,
-         icon:'el-icon-edit-outline',   
-        //  hidden:true,      
-         name:'所有订单'
-       },
-       {
-        path:'/addOrder',
-        component:addOrder,
-        icon:'el-icon-rank',   
-        name:'添加订单'
-      },       
-    ]
-  }, 
-  {
-    path: '/',
-    component: Home,
-    name:'权限管理',
-    icon:'el-icon-upload',
-    children: [
-       {
-         path:'/authorityMangement',
-         component:userAuthoriry,
-         icon:'fa fa-hourglass',   
-         name:'用户权限'
-       },    
-    ]
-  },  
   {
     path: '/',
     component: Home,
@@ -160,7 +76,152 @@ export default new Router({
 //--- 导出正常路由
 export const noAuRoutes = routes
 
-//--- 导出动态生成的路由
-export const changRoutes = [
+//--- 导出总部需要动态生成的路由
+export const zongChangRoutes = [
+  {
+    path: '/',
+    component: Home,
+    name:"用户管理",
+    meta: { noCache : false },
+    icon:'el-icon-rank',
+    // hidden:true,
+    permissionCode:2,
+    children: [
+       {
+         path:'/userMangement',
+         icon:'fa fa-globe',
+         component:allUsers,
+         name:'所有用户'
+       },
+    ]
+  },
+  {
+    path: '/',
+    component: Home,
+    name:'商品管理',
+    icon:'el-icon-sold-out',
+    permissionCode:3,
+    children: [
+       {
+         path:'/goodMangement',
+         component:allGoods,
+         icon:'fa fa-gift',     
+         name:'所有商品'
+       },
+       {
+        path:'/goodType',
+        component:goodType,
+        icon:'fa fa-lightbulb-o',     
+        name:'商品类型'
+      },       
+    ]
+  }, 
+  {
+    path: '/',
+    component: Home,
+    name:'权限管理',
+    permissionCode:5,
+    icon:'el-icon-upload',
+    children: [
+       {
+         path:'/authorityMangement',
+         component:userAuthoriry,
+         icon:'fa fa-hourglass',   
+         name:'用户权限'
+       },    
+    ]
+  },   
+]
 
+//--- 导出洪山需要动态生成的路由
+export const hongshanChangRoutes = [
+  {
+    path: '/',
+    component: Home,
+    name:"用户管理",
+    icon:'el-icon-rank',
+    // hidden:true,
+    permissionCode:2,
+    children: [
+       {
+         path:'/userMangement',
+         icon:'fa fa-globe',
+         component:allUsers,
+         name:'所有用户'
+       },
+    ]
+  },
+  {
+    path: '/',
+    component: Home,
+    name:'商品管理',
+    icon:'el-icon-sold-out',
+    permissionCode:3,
+    children: [
+       {
+         path:'/goodMangement',
+         component:allGoods,
+         icon:'fa fa-gift',     
+         name:'所有商品'
+       },
+       {
+        path:'/goodType',
+        component:goodType,
+        icon:'fa fa-lightbulb-o',     
+        name:'商品类型'
+      },       
+    ]
+  }, 
+  {
+    path: '/',
+    component: Home,
+    name:'进货管理',
+    icon:'el-icon-sold-out',
+    permissionCode:4,
+    children: [
+       {
+         path:'/purchaseMangement',
+         component:allPurchases,
+         icon:'fa fa-snowflake-o',     
+         name:'所有货单'
+       },
+    ]
+  },   
+  {
+    path: '/',
+    component: Home,
+    name:'订单管理',
+    icon:'el-icon-star-on',
+    permissionCode:5,
+    children: [
+       {
+         path:'/orderMangement',
+         component:allOrder,
+         icon:'el-icon-edit-outline',   
+        //  hidden:true,      
+         name:'所有订单'
+       },
+       {
+        path:'/addOrder',
+        component:addOrder,
+        icon:'el-icon-rank',   
+        name:'添加订单'
+      },       
+    ]
+  }, 
+  {
+    path: '/',
+    component: Home,
+    name:'权限管理',
+    permissionCode:6,
+    icon:'el-icon-upload',
+    children: [
+       {
+         path:'/authorityMangement',
+         component:userAuthoriry,
+         icon:'fa fa-hourglass',   
+         name:'用户权限'
+       },    
+    ]
+  }, 
 ]

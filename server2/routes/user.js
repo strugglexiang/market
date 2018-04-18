@@ -7,18 +7,18 @@ let jwt = require('jwt-simple')
 
 /**
  * 目录
- * 用户登录
- * 检查token是否失效
- * 负责人创建员工
- * 修改资料(老板修改)
- * 查看用户(有分页操作)
- * 获取用户资料
- * 自己修改自己资料
- * 删除工作人员
- * 检测密码
+ * 1.用户登录                  权限码1   属于登陆路由
+ * 2.检查token是否失效         权限码2   属于登陆路由
+ * 3.负责人创建员工            权限码3   属于用户管理路由
+ * 4.修改资料(老板修改)        权限码4   属于用户管理路由
+ * 5.查看用户(有分页操作)       权限码5  属于用户管理路由
+ * 6.获取用户资料              权限码6  属于用户个人设置路由 
+ * 7.自己修改自己资料          权限码7  属于用户个人设置路由
+ * 8.删除工作人员              权限码8   属于用户管理路由
+ * 9.检测密码                  权限码9  属于用户个人设置路由
  */
 
-//用户登录
+//用户登录  接口权限码1
 router.post('/login', function(req, res, next) {
     //  console.log(req.body)
      if(!req.body.userName || !req.body.password){
@@ -68,7 +68,7 @@ router.post('/login', function(req, res, next) {
      })
 });
 
-//检查token是否失效
+//检查token是否失效  接口权限码2
 router.get('/checkToken',(req,res,next) => {
     return res.json({
         status:'1',
@@ -76,13 +76,14 @@ router.get('/checkToken',(req,res,next) => {
      })    
 })
 
-//负责人创建员工
+//负责人创建员工  接口权限码3
 router.post('/createWorker', function(req, res, next) {
     let params = {
         userName:req.body.userName,
         password:global.encrypt(req.body.password),
         sex:req.body.sex,
         tel:req.body.tel,
+        authority:global.getBaseAuthority(),
     }
     let newWorker = new User(params)
     newWorker.save((err,doc) => {
@@ -100,7 +101,7 @@ router.post('/createWorker', function(req, res, next) {
     })
 });
 
-//修改资料(老板修改)
+//修改资料(老板修改) 接口权限码4
 router.post('/updateUser',(req,res,err)=>{
     if(!req.body.id){
         return res.json({
@@ -162,7 +163,7 @@ router.post('/updateUser',(req,res,err)=>{
     
 })
 
-// 查看用户
+// 查看用户  接口权限码5
 //有分页操作
 router.get('/getUsers',(req,res,next)=>{
     let pageSize = Number.parseInt(req.query.pageSize)
@@ -251,7 +252,7 @@ router.get('/getUsers',(req,res,next)=>{
     }
 })
 
-// 获取用户资料
+// 获取用户资料 接口权限码6
 //这里应该是任何用户都有的权限，和登录一样
 //没有操作
 router.get('/userInfo',(req,res,next) => {
@@ -286,7 +287,7 @@ router.get('/userInfo',(req,res,next) => {
     })
 })
 
-//  自己修改自己资料,不需要传入id
+//  自己修改自己资料,不需要传入id 接口权限码7
 router.post('/ownUpuser',(req,res,next) => {
     console.log('我运行了这里')
     let params = {
@@ -338,7 +339,7 @@ router.post('/ownUpuser',(req,res,next) => {
     })    
 })
 
-// 删除工作人员
+// 删除工作人员 接口权限码8
 router.get('/delUser',(req,res,err) => {
     // console.log('我调用了这里')
     if(!req.query.id){
@@ -364,7 +365,7 @@ router.get('/delUser',(req,res,err) => {
     })
 })
 
-// 检测密码
+// 检测密码  接口权限码9
 // global.getUserInfo()
 router.get('/checkPwd',(req,res,next) => {
     let keyword = req.query.keyword

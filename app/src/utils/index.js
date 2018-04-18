@@ -31,47 +31,50 @@ service.interceptors.response.use(response => {
             //     type: 'error',
             //     duration: 2 * 1000
             // })
-            switch(res.status){
-                case '407':
-                Message({
-                    message: res.msg,
-                    type: 'warning',
-                    duration: 2 * 1000
-                })  //请求未携带token      
-                router.replace({
-                    path: 'login'
-                })  
-                break;
-                case '406':
-                Message({
-                    message: res.msg,
-                    type: 'warning',
-                    duration: 2 * 1000
-                }) //token解析失败，通知后端管理人员检查 
-                router.replace({
-                    path: 'login'
-                })            
-                break;
-                case '405':
-                Message({
-                    message: res.msg,
-                    type: 'warning',
-                    duration: 2 * 1000
-                }) //token失效,请重新登录  
-                router.replace({
-                    path: 'login'
-                })        
-                break;            
-            }
+            // switch(res.status){
+            //     case '407':
+            //     Message({
+            //         message: res.msg,
+            //         type: 'warning',
+            //         duration: 2 * 1000
+            //     })  //请求未携带token      
+            //     router.replace({
+            //         path: 'login'
+            //     })  
+            //     break;
+            //     case '406':
+            //     Message({
+            //         message: res.msg,
+            //         type: 'warning',
+            //         duration: 2 * 1000
+            //     }) //token解析失败，通知后端管理人员检查 
+            //     router.replace({
+            //         path: 'login'
+            //     })            
+            //     break;
+            //     case '405':
+            //     Message({
+            //         message: res.msg,
+            //         type: 'warning',
+            //         duration: 2 * 1000
+            //     }) //token失效,请重新登录  
+            //     router.replace({
+            //         path: 'login'
+            //     })        
+            //     break;            
+            // }
     return response
 } ,error => {
-    console.log('response拦截器错误' + error)// for debug
+    console.log('response拦截器错误' , error,error.response)// for debug
     // console.log('token失效是运行这里吗')
     Message({
-      message: error.message,
-      type: 'error',
+      message: error.response.data.msg,
+      type: 'warning',
       duration: 2 * 1000
     })
+    router.replace({
+        path: 'login'
+    })     
     return Promise.reject(error)
 })
 

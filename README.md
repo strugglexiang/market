@@ -24,6 +24,7 @@
 - [16-axions请求为什么会发送两次](#16-axions请求为什么会发送两次)
 - [17-饿了么的bug](#17-饿了么的bug)
 - [18-后台怎么主动抛出错误好让axios拦截](#18-后台怎么主动抛出错误好让axios拦截)
+- [19-有关权限模块的思考](#19-有关权限模块的思考)
 
 
 ### 1-项目结构搭建
@@ -418,7 +419,6 @@ router.options('/upload', function* (){
 
 
 ### 18-后台怎么主动抛出错误好让axios拦截
-res.status(401)
 ```
 service.interceptors.response.use(response => {
     //这里做数据处理
@@ -429,12 +429,104 @@ service.interceptors.response.use(response => {
      //这里做拦截
      return Promise.reject(error)
 })
+
+发现解决方案
 ```
-尝试:
-```
-if (decoded.exp <= Date.now()) {
-  res.end('Access token has expired', 400);
-}
+1.后端跨域要处理option请求
+    if (req.method == 'OPTIONS') {
+        res.end('OK')
+    }
+    else {
+        next()
+    }
+2. 返回的时候带错误状态码
+    return res.status(401).json({
+
+    })
+3. 这样前端response拦截器就能接收到response的错误
+res.json返回的数据用error.response拿取    
 ```
 
-https://cnodejs.org/topic/53c652bfc9507b404446ee40
+### 19-有关权限模块的思考
+思考权限这块后台要怎么写也有几天了，在这里总结一下思路，
+不然回头忘了自己是怎么写的了
+1. 首先在全局配置一个最基础的权限数组，只要创建员工，他就有这个权限，
+sava的时候拿这个全局数组存
+2. 这个全局基础数组和是前端搭配的，让前端能够很轻松的生成动态路由
+3. 那么后端拿到用户的权限数组后，怎么根据他的权限数组来限制他访问接口呢？
+这里的思路是这样的:
+>首先我先人为的给每一个接口设置一个唯一的权限的码
+>
+>后台解析token的时候，拿到了用户的权限数组，写一个函数去解析
+>
+>解析这个前端的大路由的权限码，获得这个大路由要使用的接口的接口权限码(第一步设置的)
+>存入一个本次访问的临时的数组里面(req.authority)
+>
+>然后再写一个express全局中间件，这个中间件判断当前访问的接口是什么接口，比对这个接口的权限
+>码是不是在临时数组里面，如果不在，说明没有权限访问这个接口，return就行了。
+
+```
+1.用户最基础权限配置
+let baseAuthority = [
+    {
+        auName: '首页',//type string
+        auCode: 0,// type number
+    },
+    {
+        auName: '登陆',//type string
+        auCode: 1,// type number
+    },
+    {
+        auName: '个人设置',//type string
+        auCode: 6,// type number
+    },
+]
+2.解析前端的权限码，生成小权限数组
+function analyzeAuthority(auArray){
+    let temp = []
+    auArray.forEach((item,index,array) => {
+        // --- 每一个item都是对象，包含auCode,auName
+    })
+    return temp 
+}
+3.权限解析逻辑
+req.body.apiCode = analyzeAuthority(userInfo.authority)
+4.接口权限限制中间件
+function avalidateAuthority(req,res,next){
+    // console.log(req.originalUrl)
+    // console.log(req.apiCode)
+    let currentCode = null
+    switch(req.originalUrl){
+        case '/user/login':
+          currentCode = 1
+          break;
+        case '/user/checkToken':
+          currentCode = 2
+          break;
+        case '/user/createWorker':
+          currentCode = 3
+          break; 
+        case '/user/updateUser':
+          currentCode = 4
+        .......         
+    }
+    if(req.body.apiCode.includes(currentCode)){
+        next()
+    }else{
+        return res.json({
+            status:'0',
+            msg:'你没有权限访问这个接口'
+        })
+    }
+}
+5.最后使用中间件测试
+app.use((req,res,next) => {
+    // console.log(req.originalUrl,req.originalUrl.includes('/upload'))
+    // || req.originalUrl === '/goods/upload'
+    if(req.originalUrl === '/user/login' || req.originalUrl.includes('/upload') ){
+        next();
+    }else{
+        global.avalidateAuthority(req,res,next)
+    }
+})
+```

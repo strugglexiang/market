@@ -26,9 +26,16 @@ app.all('*', function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-    next();
+    // next();
+    if (req.method == 'OPTIONS') {
+        res.end('OK')
+    }
+    else {
+        next()
+    }
 });
 
+//token验证
 app.use((req,res,next) => {
     if(req.originalUrl === '/user/login' || req.originalUrl.includes('/upload') ){
         next();
@@ -36,7 +43,18 @@ app.use((req,res,next) => {
         global.validateTotoken(req,res,next)
     }
 })
-// app.use(global.validateTotoken)
+
+// 接口权限验证
+app.use((req,res,next) => {
+    // console.log(req.originalUrl,req.originalUrl.includes('/upload'))
+    // || req.originalUrl === '/goods/upload'
+    if(req.originalUrl === '/user/login' || req.originalUrl.includes('/upload') ){
+        next();
+    }else{
+        global.avalidateAuthority(req,res,next)
+    }
+})
+
 
 //使用路由
 app.use('/user', user);

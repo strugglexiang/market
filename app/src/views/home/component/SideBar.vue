@@ -44,7 +44,7 @@
 /**
  * 1. 当前激活菜单的 index
  */
-
+import _ from 'underscore'
 export default {
    data(){
        return {
@@ -61,8 +61,9 @@ export default {
                  return true
                }
            })
-           temp = temp.concat(temp.shift())
-        //    console.log(temp)
+           temp = _.sortBy(temp,(item) => {
+               return item.permissionCode
+           })
            return temp
        }
    },

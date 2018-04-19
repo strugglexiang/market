@@ -38,9 +38,9 @@ router.beforeEach((to, from, next) => {
                     // console.log(store.state.user.addRouters)
                     // console.log('用户手动刷新我还增加动态路由',store.getters.personAu.length)
                     router.addRoutes(store.getters.personAu) // 动态添加可访问路由表
-                    next()
+                    // next()
                     // console.log('我运行到这里出了错')
-                    // next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+                    next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
                   })
               })
               .catch(error => {

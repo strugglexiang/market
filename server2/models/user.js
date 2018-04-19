@@ -24,6 +24,9 @@ let userSchema = new Schema({
         auName:'string',//一级权限名称
         auCode:'number',//一级权限编码
     }],//权限数组，将用于权限模块
+    isAdmin:{
+        type:'number'
+    }
 })
 
 module.exports = mongoose.model('user',userSchema)

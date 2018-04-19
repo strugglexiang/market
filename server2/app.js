@@ -8,6 +8,7 @@ var bodyParser = require('body-parser')
 var user = require('./routes/user');
 var goodsType = require('./routes/goodsType');
 var goods = require('./routes/goods');
+var authority = require('./routes/authority');
 //导入全局变量
 var global = require('./config')
 
@@ -61,6 +62,6 @@ app.use((req,res,next) => {
 app.use('/user', user);
 app.use('/goodsType', goodsType);
 app.use('/goods', goods);
-
+app.use('/authority', authority);
 
 module.exports = app;

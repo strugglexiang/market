@@ -12,16 +12,23 @@ import allUsers from '@/views/userManagement/allUsers'
 //--商品管理
 import allGoods from '@/views/goodManagement/allGoods'
 import goodType from '@/views/goodManagement/goodTypes'
-//--进货管理
-import allPurchases from '@/views/purchaseManagement/allPurchase'
-//--订单管理
-import allOrder from '@/views/sold/allOrder'
-import addOrder from '@/views/sold/addOrder'
 //--权限管理
 import userAuthoriry from '@/views/authority/userAuthoriry'
 //--个人设置
 import upPass from '@/views/setting/upPass'
 import upPerson from '@/views/setting/upPerson'
+
+// ----------- 总部私有  ---------
+// 货单管理
+import inDepot from '@/views/depot/inDepot'
+import outDepot from '@/views/depot/outDepot'
+// ----------- 洪山分部私有  ---------
+//--进货管理
+import allPurchases from '@/views/purchaseManagement/allPurchase'
+//--订单管理
+import allOrder from '@/views/sold/allOrder'
+import addOrder from '@/views/sold/addOrder'
+
 
 Vue.use(Router)
 
@@ -46,28 +53,6 @@ let routes = [
        },
     ]
   },   
-  {
-    path: '/',
-    component: Home,
-    name:'个人设置',
-    icon:'el-icon-setting',
-    children: [
-       {
-         path:'/upPerson',
-         component:upPerson,
-         icon:'fa fa-user-circle-o',   
-         name:'修改资料'
-       }, 
-       {
-        path:'/upPass',
-        component:upPass,
-        icon:'fa fa-lock',   
-        name:'修改密码'
-      },            
-    ]
-  },        
-  
-
 ]
 export default new Router({
   routes
@@ -119,6 +104,27 @@ export const zongChangRoutes = [
   {
     path: '/',
     component: Home,
+    name:'货单管理',
+    icon:'el-icon-sold-out',
+    permissionCode:4,
+    children: [
+       {
+         path:'/inDepot',
+         component:inDepot,
+         icon:'el-icon-edit-outline',     
+         name:'进货管理'
+       },
+       {
+        path:'/outDepot',
+        component:outDepot,
+        icon:'el-icon-rank',     
+        name:'出货管理'
+      },       
+    ]
+  },   
+  {
+    path: '/',
+    component: Home,
     name:'权限管理',
     permissionCode:5,
     icon:'el-icon-upload',
@@ -129,6 +135,27 @@ export const zongChangRoutes = [
          icon:'fa fa-hourglass',   
          name:'用户权限'
        },    
+    ]
+  }, 
+  {
+    path: '/',
+    component: Home,
+    name:'个人设置',
+    icon:'el-icon-setting',
+    permissionCode:6,
+    children: [
+       {
+         path:'/upPerson',
+         component:upPerson,
+         icon:'fa fa-user-circle-o',   
+         name:'修改资料'
+       }, 
+       {
+        path:'/upPass',
+        component:upPass,
+        icon:'fa fa-lock',   
+        name:'修改密码'
+      },            
     ]
   },   
 ]
@@ -224,4 +251,25 @@ export const hongshanChangRoutes = [
        },    
     ]
   }, 
+  {
+    path: '/',
+    component: Home,
+    name:'个人设置',
+    icon:'el-icon-setting',
+    permissionCode:7,
+    children: [
+       {
+         path:'/upPerson',
+         component:upPerson,
+         icon:'fa fa-user-circle-o',   
+         name:'修改资料'
+       }, 
+       {
+        path:'/upPass',
+        component:upPass,
+        icon:'fa fa-lock',   
+        name:'修改密码'
+      },            
+    ]
+  },   
 ]

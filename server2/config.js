@@ -72,7 +72,7 @@ function analyzeAuthority(auArray){
         }
         //权限管理
         if(item.auCode === 6){
-            temp = temp.concat([])
+            temp = temp.concat([5,19,20])
         }
         //个人设置
         if(item.auCode === 7){
@@ -152,10 +152,19 @@ function validateTotoken(req,res,next){
 // ------------------------ 接口权限限制中间件
 function avalidateAuthority(req,res,next){
     // console.log('我运行到接口权限解析',req.query,req.body)
-    // console.log(req.originalUrl)
+    // console.log(req.originalUrl,req)
     // console.log(req.apiCode)
     let currentCode = null
-    switch(req.originalUrl){
+    let baseUrl = ''
+    if(req.originalUrl.indexOf('?') !== -1){
+        // console.log('ssss',req.originalUrl)
+        let num = req.originalUrl.indexOf('?')
+        baseUrl = req.originalUrl.slice(0,num)
+    }else{
+        baseUrl = req.originalUrl
+    }
+    // console.log('最基础的地址',baseUrl)
+    switch(baseUrl){
         case '/user/login':
           currentCode = 1
           break;
@@ -209,12 +218,18 @@ function avalidateAuthority(req,res,next){
           break;
         case '/goods/upload':
           currentCode = 18
-          break;        
+          break; 
+        case '/authority/getAuthority':
+          currentCode = 19
+          break;
+        case '/authority/giveAuthority':
+          currentCode = 20
+          break;             
     }
-    // console.log('ssss',req.apiCode)
-    // console.log('ssss',userInfo)
+    // console.log('接口权限',req.body.apiCode)
+    // console.log('ssss',userInfo.isAdmin)
     // console.log(req.body.apiCode.includes(6))
-    // console.log(currentCode)
+    // console.log('当前接口码',currentCode)
     if(req.body.apiCode.includes(currentCode) || userInfo.isAdmin){
         next()
     }else{

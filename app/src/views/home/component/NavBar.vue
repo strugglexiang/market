@@ -80,7 +80,7 @@ export default {
         this.show = false
         setTimeout(function(){
            this.show = true
-        }.bind(this), 500);
+        }.bind(this), 400);
     }
   },
   mounted () {
@@ -141,7 +141,7 @@ export default {
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: all .5s ease;
+  transition: all .4s ease;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;

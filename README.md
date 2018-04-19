@@ -25,7 +25,9 @@
 - [17-饿了么的bug](#17-饿了么的bug)
 - [18-后台怎么主动抛出错误好让axios拦截](#18-后台怎么主动抛出错误好让axios拦截)
 - [19-有关权限模块的思考](#19-有关权限模块的思考)
-- [20-router.beforeEach出现死循环](#20-router.beforeEach出现死循环)
+- [20-router.beforeEach中next的理解](#20-router.beforeEach中next的理解)
+- [21-es6数组去重](#21-es6数组去重)
+- [22-underscore对数组按照自定义顺序排序](#22-underscore对数组按照自定义顺序排序)
 
 ### 1-项目结构搭建
 1. 使用官方脚手架vue-cli搭建目录结构
@@ -531,9 +533,8 @@ app.use((req,res,next) => {
 })
 ```
 
-### 20-router.beforeEach出现死循环
-在写router.beforeEach的时候出现了死循环，检查了很久发现是因为用了
-> next({ ...to, replace: true })
+### 20-router.beforeEach中next的理解 
+> next({ ...to, replace: true })  replace设置为true应该是为了等路由完全加载完成后再跳转，清除历史记录,也可以避免死循环;解决手动刷新后动态路由丢失
 
 查询资料，了解到原理
 ```
@@ -552,4 +553,38 @@ router.beforeEach((to, from, next) => {
 
   }
 });
+```
+
+### 21-es6数组去重
+用到set和Array.from。
+```
+1.set 接收数组去重，但返回的是对象
+let arr = [1,1,'1','1',undefined,undefined,NaN,NaN]
+console.log(new set(arr))
+2.就该轮到Array.from出场了，它的作用，就是可以把类数组对象、可迭代对象转化为数组。
+cosnole.log(Array.from(new Set(arr)))
+```
+
+
+###  22-underscore对数组按照自定义顺序排序
+http://yijiebuyi.com/blog/76ac90e5bd31253769f205888bc23cee.html
+```
+如果你的数组是一个对象组合
+var arr=
+[
+{"key":"key1","value":"value1","createTime":"124573216"},
+{"key":"key2","value":"value2","createTime":"124593216"},
+{"key":"key3","value":"value3","createTime":"124596216"},
+{"key":"key4","value":"value4","createTime":"124596286"},
+{"key":"key5","value":"value5","createTime":"124596289"},
+]
+正序排列
+_.sortBy(arr, function(item) {
+  return item.createTime;
+});
+如何倒序排列
+_.sortBy(arr, function(item) {
+  return -item.createTime;
+});
+
 ```

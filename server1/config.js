@@ -68,7 +68,7 @@ function analyzeAuthority(auArray){
         }
         //权限管理
         if(item.auCode === 5){
-            temp = temp.concat([])
+            temp = temp.concat([5,19,20])
         }
         //个人设置
         if(item.auCode === 6){
@@ -149,7 +149,15 @@ function avalidateAuthority(req,res,next){
     // console.log(req.originalUrl)
     // console.log(req.apiCode)
     let currentCode = null
-    switch(req.originalUrl){
+    let baseUrl = ''
+    if(req.originalUrl.indexOf('?') !== -1){
+        // console.log('ssss',req.originalUrl)
+        let num = req.originalUrl.indexOf('?')
+        baseUrl = req.originalUrl.slice(0,num)
+    }else{
+        baseUrl = req.originalUrl
+    }
+    switch(baseUrl){
         case '/user/login':
           currentCode = 1
           break;
@@ -203,7 +211,13 @@ function avalidateAuthority(req,res,next){
           break;
         case '/goods/upload':
           currentCode = 18
-          break;        
+          break;  
+        case '/authority/getAuthority':
+          currentCode = 19
+          break;
+        case '/authority/giveAuthority':
+          currentCode = 20
+          break;                  
     }
     // console.log('ssss',req.apiCode)
     // console.log('ssss',userInfo)

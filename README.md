@@ -12,7 +12,7 @@
 - [4-根据权限动态生成路由](#4-根据权限动态生成路由)
 - [5-在vue中写scss](#5-在vue中写scss)
 - [6-在vue中使用样式的经验](#6-在vue中使用样式的经验)
-- [7-store里面的action里面如果要调用同级action的话](#7-store里面的action里面如果要调用同级action的话)
+- [7-store里面的action里面如果要调用同级action的话](#7-store里面的action里面如果要调用同级action)
 - [8-文字不可复制](#8-文字不可复制)
 - [9-store模块化](#9-store模块化)
 - [10-class的绑定](#10-class的绑定)
@@ -28,6 +28,10 @@
 - [20-router.beforeEach中next的理解](#20-router.beforeEach中next的理解)
 - [21-es6数组去重](#21-es6数组去重)
 - [22-underscore对数组按照自定义顺序排序](#22-underscore对数组按照自定义顺序排序)
+- [23-mongoose创建时间和更新时间](#23-mongoose创建时间和更新时间)
+- [24-mongodb中group进行分组计算](#24-mongodb中group进行分组计算)
+- [25-mongodb使用聚合](#25-mongodb使用聚合)
+- [26-mongoose数组类型数据操作](#26-mongoose数组类型数据操作)
 
 ### 1-项目结构搭建
 1. 使用官方脚手架vue-cli搭建目录结构
@@ -148,7 +152,7 @@ npm install --save-dev node-sass
 2. vue中字体使用?
 
 
-### 7-store里面的action里面如果要调用同级action的话
+### 7-store里面的action里面如果要调用同级action
 https://vuex.vuejs.org/zh-cn/actions.html#
 
 ### 8-文字不可复制
@@ -587,4 +591,168 @@ _.sortBy(arr, function(item) {
   return -item.createTime;
 });
 
+```
+
+
+### 23-mongoose创建时间和更新时间
+在schema中设置timestamps为true，schema映射的文档document会自动添加createdAt和updatedAt这两个字段，代表创建时间和更新时间
+```
+var UserSchema = new Schema(
+  {...},
+  { timestamps: true }
+);
+```
+https://www.cnblogs.com/duhuo/p/6232534.html
+
+https://www.cnblogs.com/xiaohuochai/p/7215067.html?utm_source=itdadao&utm_medium=referral
+
+
+### 24-mongodb中group进行分组计算
+// 准备测试数据
+db.user.drop();
+for(var i=10; i< 100; i++) {
+  db.user.insert({
+    name:"user" + i, 
+    age : Math.floor(Math.random()*10)+ 20, 
+    sex : Math.floor(Math.random()*3)%2 ==0 ? 'M' : 'F',
+    chinese : Math.floor(Math.random()*50)+50,
+    math : Math.floor(Math.random()*50)+50,
+    english : Math.floor(Math.random()*50)+50,
+    class : "C" + i%5
+  })
+}
+ 
+// group函数
+// 按照class进行分组，显示每个class中的用户姓名和性别
+db.user.group({
+  key: {"class": true},
+  initial: {"person": []},
+  reduce: function(cur, prev) {
+    prev.person.push({name: cur.name, sex: cur.sex, age: cur.age});
+  }
+});
+ 
+// 对age>25的用户，按照class进行分组，显示每个class中的用户姓名和性别，并统计每组的人数
+db.user.group({
+  key: {"class": true},
+  initial: {"person": []},
+  reduce: function(doc, out){
+    out.person.push({name: doc.name, sex: doc.sex, age: doc.age});
+  },
+  finalize: function(out){
+    out.count = out.person.length;
+  },
+  condition: {"age": {$gt: 25}}
+})
+ 
+// 分组计算每个class中，chinese最大值和最小值
+db.user.group({
+  key: {"class": true},
+  initial: {"chinese_min": 0, "chinese_max":0 },
+  reduce: function(doc, out){
+    out.chinese_min = doc.chinese;
+    out.chinese_min = doc.chinese;
+ 
+    out.chinese_min = Math.min(out.chinese_min, doc.chinese);
+    out.chinese_max = Math.max(out.chinese_max, doc.chinese)
+  },
+})
+```
+group参数选项：
+1. key： 这个就是分组的key,如果指定了key:{“day” : true}，那么在分组的结果中就会显示每组“day”的键值。
+2. initial： 每组都分享一个初始化函数，特别注意：是每一组initial函数。
+3. reduce： 这个函数的第一个参数是当前的文档对象，第二个参数是上一次function操作的累计对象。有多少个文档， $reduce就会调用多少次。
+4. condition： 这个就是过滤条件。
+5. finalize： 这是个函数，每一组文档执行完后，多会触发此方法。
+
+### mongodb使用聚合
+https://cnodejs.org/topic/56ac82e724b0c1ec628ff0d2
+https://blog.csdn.net/suyu_yuan/article/details/51768725
+mongodb官方：https://docs.mongodb.com/manual/reference/operator/aggregation/group/#pipe._S_group
+菜鸟教程详细说明:http://www.runoob.com/mongodb/mongodb-aggregate.html
+```
+1.数据
+{ "_id" : 1, "item" : "abc", "price" : 10, "quantity" : 2, "date" : ISODate("2014-03-01T08:00:00Z") }
+{ "_id" : 2, "item" : "jkl", "price" : 20, "quantity" : 1, "date" : ISODate("2014-03-01T09:00:00Z") }
+{ "_id" : 3, "item" : "xyz", "price" : 5, "quantity" : 10, "date" : ISODate("2014-03-15T09:00:00Z") }
+{ "_id" : 4, "item" : "xyz", "price" : 5, "quantity" : 20, "date" : ISODate("2014-04-04T11:21:39.736Z") }
+{ "_id" : 5, "item" : "abc", "price" : 10, "quantity" : 10, "date" : ISODate("2014-04-04T21:23:13.331Z") }
+2.使用
+db.sales.aggregate(
+   [
+      {
+        $group : {
+           _id : { month: { $month: "$date" }, day: { $dayOfMonth: "$date" }, year: { $year: "$date" } },
+           totalPrice: { $sum: { $multiply: [ "$price", "$quantity" ] } },
+           averageQuantity: { $avg: "$quantity" },
+           count: { $sum: 1 }
+        }
+      }
+   ]
+)
+3.结果
+{ "_id" : { "month" : 3, "day" : 15, "year" : 2014 }, "totalPrice" : 50, "averageQuantity" : 10, "count" : 1 }
+{ "_id" : { "month" : 4, "day" : 4, "year" : 2014 }, "totalPrice" : 200, "averageQuantity" : 15, "count" : 2 }
+{ "_id" : { "month" : 3, "day" : 1, "year" : 2014 }, "totalPrice" : 40, "averageQuantity" : 1.5, "count" : 2 }
+```
+
+### 26-mongoose数组类型数据操作
+<https://blog.csdn.net/xuweilinjijis/article/details/77044853>
+```
+var mongoose = require('mongoose');  
+mongoose.connect('mongodb://localhost:27017/test');  
+var db = mongoose.connection;  
+db.on('error',function (err) {  
+  console.log('Mongoose connection error: ' + err);  
+});  
+  
+db.once('open', function() {  
+  console.log('Mongoose connection connected!');  
+});  
+  
+var Schema = mongoose.Schema;  
+  
+var userSchema = new Schema({  
+    _id : String,  
+    tags: [{ _id: false, tagID: Number, optDate: Date, enable: Boolean }]  
+});  
+  
+var User = mongoose.model('User', userSchema,'user');  
+  
+//查询  
+User.aggregate({ $project: { _id : 1, tags: 1 } }).unwind('tags').exec(function (err, users) {  
+  if (err) return console.error(err);  
+  console.log(users);  
+});  
+  
+//插入  
+User.update({ "_id" : "195861"}, { $push : { tags: {tagID : 1, optDate : Date("2016-08-12T15:21:02.930Z"), enable : false}}},function(err,result){  
+  if (err) return console.error(err);  
+  console.log(result);  
+  });  
+  
+//删除  
+User.update({ "_id" : "195861"}, { $pull : { tags: {tagID : 2}}},function(err,result){  
+  if (err) return console.error(err);  
+  console.log(result);  
+  });  
+  
+  
+//更新  
+User.update(  
+{   
+     "_id" : "195861",  
+     "tags.tagID" : 1  
+},  
+{  
+     $set: {  
+          "tags.$" : {  
+          'tagID" : 333,  
+          "optDate" : new Date(),  
+          "enable" : true}  
+           }  
+},function(err,result){  
+  if (err) return console.error(err);  
+  console.log(result);  
+  });  
 ```

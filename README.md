@@ -32,6 +32,8 @@
 - [24-mongodb中group进行分组计算](#24-mongodb中group进行分组计算)
 - [25-mongodb使用聚合](#25-mongodb使用聚合)
 - [26-mongoose数组类型数据操作](#26-mongoose数组类型数据操作)
+- [27-vue里面父子组件通信](#27-vue里面父子组件通信)
+- [28-vue里面非父子组件通信](#28-vue里面非父子组件通信)
 
 ### 1-项目结构搭建
 1. 使用官方脚手架vue-cli搭建目录结构
@@ -150,6 +152,18 @@ npm install --save-dev node-sass
 垂直居中:align-items:center;
 ```
 2. vue中字体使用?
+3. 文本过长省略号
+```
+1. 单行
+overflow: hidden;
+text-overflow:ellipsis;
+white-space: nowrap;
+2. 多行（不要限制高度）
+display: -webkit-box;
+-webkit-box-orient: vertical;
+-webkit-line-clamp: 3;//行数控住
+overflow: hidden;
+```
 
 
 ### 7-store里面的action里面如果要调用同级action
@@ -755,4 +769,87 @@ User.update(
   if (err) return console.error(err);  
   console.log(result);  
   });  
+```
+
+
+27-vue里面父子组件通信
+https://cn.vuejs.org/v2/guide/components.html#Prop
+这里说的父子组件通信，不用vuex
+首先说下常规方法
+1. 父传子
+>1. 传入属性
+>```markdown
+> 首先在子组件中声明props属性接收又父组件传来的数据
+> props:['message']
+> props:{
+>   message:{
+>    type: String,
+>    default: 'ss'
+>    required: true
+>   }    
+>}
+> 再父组件调用子组件的时候传入就行了
+> <child message='你好'></child>
+> <child :message='parent-property'></child>
+>
+>```
+>2. 传入方法
+>```markdown
+>  1. 第一种方法和上面一样
+>  2. 第二种
+>    父组件调用子组件用ref标明
+>    <child ref= 'test'></child>
+>    然后付组件在自己的某个方法中调用
+>    parentMethod(){
+>        this.refs['test'].childMethod('传参')
+>    }
+>    ref可以是动态的，用v-for渲染数组列表可以试下v-bind:ref='item'
+>```
+
+2. 子传父
+```
+1.子组件调用父组件方法
+<template>
+<div @click="iclick"></div>
+</template>
+methods:{
+    iclick(){
+        let data = {
+            a:'data'
+        };
+        this.$emit('ievent',data,'lalala');
+    }
+}
+2.父组件方法接收数据触发
+<i-template @ievent = "ievent"></i-template>
+methods:{
+    ievent(...data){
+        console.log('allData:',data);// data为包含传过来所有数据的数组，第一个元素是对象，第二个元素是字符串
+    }
+}
+```
+
+### 28-vue里面非父子组件通信
+非父子组件之间通信，vue官方锐减使用vueX，但是这里相较简单，所以采用的是利用给一个空实例eventHub，作为两个组件的中央数据总线，使用this.$root.eventHub.$emit来派发自定义事件，使用this.$root.eventHub.$on来监控 
+这里特别说明$root，官方解释：表示当前组建树的根实例，如果根实例没有父实例，次实例将会是自己
+```
+1. 跟组件中创建第三方总线
+new Vue({
+  // el: '#app',
+  router,
+  template: '<App/>',
+  components: {
+    App
+  },
+  data: {
+    eventHub: new Vue() // 给data添加一个 名字为eventHub 的空vue实例,用来传输非父子组件的数据
+  }
+}).$mount('#app'); // 手动挂载，#app
+2. 组件2监控事件
+created() {
+    // 获取按钮组件的点击的元素，用在drop方法里
+    this.$root.eventHub.$on('cart.add', this.drop);
+},
+3. 组件2分发组件1自定义事件，传递信息event.target
+this.$root.eventHub.$emit('cart.add', event.target); // 传输点击的目标元素
 ```

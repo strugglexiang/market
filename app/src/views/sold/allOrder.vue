@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import minx from './minx'
+import minx from './minx/allOrder.js'
 export default {
     mixins: [minx],
     data(){

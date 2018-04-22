@@ -1,6 +1,7 @@
 let express = require('express')
 let router = express.Router()
 let Purchase = require('../models/purchase')
+let Goods = require('../models/goods')
 let global = require('../config')
 
 /**
@@ -34,6 +35,29 @@ router.post('/addPurchase', (req, res, next) => {
     if(req.body.content){
         params.content = req.body.content
     } 
+    //--------------- 商品中对应的商品数量减去
+    req.body.content.forEach((item,index,array) => {
+        // console.log(item)
+        Goods.update(
+            {
+               goodName: item.goodName,
+            },
+            {
+                $inc:{
+                    num: + item.num
+                }
+            },
+            (err,doc) => {
+               if(err){
+                   return res.json({
+                       statu:'0',
+                       msg:err.message
+                   })
+               }
+            },
+        )
+    })
+    //--------------- 生成订单    
     let newOne = new Purchase(params)
     newOne.save((err,doc) => {
         if(err){

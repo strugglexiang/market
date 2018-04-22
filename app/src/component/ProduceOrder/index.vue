@@ -40,6 +40,7 @@
             small
             layout="prev, pager, next"
             @current-change='changePageNo'
+            :current-page.sync="listQuery.pageNo"
             :page-size="listQuery.pageSize"
             :total="totalcount">
             </el-pagination>             

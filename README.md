@@ -772,7 +772,7 @@ User.update(
 ```
 
 
-27-vue里面父子组件通信
+### 27-vue里面父子组件通信
 https://cn.vuejs.org/v2/guide/components.html#Prop
 这里说的父子组件通信，不用vuex
 首先说下常规方法

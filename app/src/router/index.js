@@ -25,6 +25,7 @@ import outDepot from '@/views/depot/outDepot'
 // ----------- 洪山分部私有  ---------
 //--进货管理
 import allPurchases from '@/views/purchaseManagement/allPurchase'
+import addPurchases from '@/views/purchaseManagement/addPurchase'
 //--订单管理
 import allOrder from '@/views/sold/allOrder'
 import addOrder from '@/views/sold/addOrder'
@@ -212,6 +213,12 @@ export const hongshanChangRoutes = [
          icon:'fa fa-snowflake-o',     
          name:'所有货单'
        },
+       {
+        path:'/addchaseMangement',
+        component:addPurchases,
+        icon:'fa fa-firefox',     
+        name:'添加货单'
+      },
     ]
   },   
   {

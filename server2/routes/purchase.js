@@ -206,7 +206,7 @@ router.get('/delPurchase', (req, res, next) => {
     if(!req.query.id){
         return res.json({
             status:"0",
-            msg:'请传入订单id'
+            msg:'请传入进货单id'
         })
     }
     let params = {
@@ -221,7 +221,7 @@ router.get('/delPurchase', (req, res, next) => {
         }
         return res.json({
             status:"1",
-            msg:"删除订单成功",
+            msg:"删除进货单成功",
             result:doc
         })          
     })

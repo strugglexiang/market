@@ -64,11 +64,11 @@ function analyzeAuthority(auArray){
         //进货管理
         if(item.auCode === 4){
             //接口暂代开发,先连接一个空数组
-            temp =  temp.concat([])
+            temp =  temp.concat([15,21,22,23,24])
         }
         //订单管理
         if(item.auCode === 5){
-            temp = temp.concat([])
+            temp = temp.concat([15,25,26,27,28])
         }
         //权限管理
         if(item.auCode === 6){
@@ -224,7 +224,31 @@ function avalidateAuthority(req,res,next){
           break;
         case '/authority/giveAuthority':
           currentCode = 20
-          break;             
+          break; 
+        case '/purchase/addPurchase':
+          currentCode = 21
+          break;   
+        case '/purchase/getPurchase':
+          currentCode = 22
+          break;   
+        case '/purchase/upPurchase':
+          currentCode = 23
+          break; 
+        case '/purchase/delPurchase':
+          currentCode = 24
+          break;   
+        case '/order/getOrders':
+          currentCode = 25
+          break;   
+        case '/order/addOrders':
+          currentCode = 26
+          break;   
+        case '/order/upOrders':
+          currentCode = 27
+          break;   
+        case '/order/delOrders':
+          currentCode = 28
+          break;                                 
     }
     // console.log('接口权限',req.body.apiCode)
     // console.log('ssss',userInfo.isAdmin)

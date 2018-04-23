@@ -44,11 +44,7 @@ router.beforeEach((to, from, next) => {
                   })
               })
               .catch(error => {
-                   this.$message({
-                   type:'error',
-                   message:res.data.msg,
-                   duration:1000
-                 })
+                   console.log(error)
               })
            }else{
              next()

@@ -32,6 +32,16 @@ router.post('/addPurchase', (req, res, next) => {
     if(req.body.total){
         params.total = req.body.total
     } 
+    if(req.body.payWay){
+        if(global.delKong(req.body.payWay).length){
+            params.payWay = global.delKong(req.body.payWay)
+        }else{
+            return res.json({
+                status:'0',
+                msg:'支付类型请不要传入空字符串'
+            })
+        }  
+    }
     if(req.body.content){
         params.content = req.body.content
     } 
@@ -91,6 +101,9 @@ router.get('/getPurchase', (req, res, next) => {
                 {
                     total:Boolean(Number.parseFloat(keyword)) ? Number.parseFloat(keyword) : null
                 },
+                {
+                    payWay: {$regex : reg}
+                },
             ]
         }
         Purchase.count(params,(err,count) => {
@@ -113,7 +126,7 @@ router.get('/getPurchase', (req, res, next) => {
                 }
                 if(!doc.length){
                     return res.json({
-                        status:'0',
+                        status:'1',
                         msg:'没有符合条件的选项',
                         result:doc
                     })
@@ -147,7 +160,7 @@ router.get('/getPurchase', (req, res, next) => {
                 }
                 if(!doc.length){
                     return res.json({
-                        status:'0',
+                        status:'1',
                         msg:'没有符合条件的选项',
                         result:doc
                     })
@@ -178,6 +191,16 @@ router.post('/upPurchase', (req, res, next) => {
     if(req.body.total){
         upobj.total = req.body.total
     } 
+    if(req.body.payWay){
+        if(global.delKong(req.body.payWay).length){
+            upobj.payWay = global.delKong(req.body.payWay)
+        }else{
+            return res.json({
+                status:'0',
+                msg:'支付类型请不要传入空字符串'
+            })
+        }  
+    }
     if(req.body.content){
         upobj.contents = req.body.content
     }

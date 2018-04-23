@@ -64,7 +64,7 @@ function analyzeAuthority(auArray){
         //货单管理
         if(item.auCode === 4){
             //接口暂代开发,先连接一个空数组
-            temp = temp.concat([])
+            temp = temp.concat([15,21,22,23,24,25,26,27,28])
         }
         //权限管理
         if(item.auCode === 5){
@@ -113,8 +113,8 @@ function validateTotoken(req,res,next){
           var decoded = jwt.decode(token, secret);
           // 如果失效
           if (decoded.exp <= Date.now()) {
-              return res.json({
-                  status:"405",
+              return res.status(401).json({
+                  status:"0",
                   msg:'token失效,请重新登录'
               })
           }   
@@ -128,16 +128,16 @@ function validateTotoken(req,res,next){
           next()               
        } catch (error) {
            //解析的过程失败，抛出异常
-           return res.json({
-               status:'406',
+           return res.status(400).json({
+               status:'0',
                msg:'token解析失败，通知后端管理人员检查',
                err:error.message
            })
 
        }
     }else{
-        return res.json({
-            status:'407',
+        return res.status(401).json({
+            status:'0',
             msg:'请求未携带token'
         })
     }     
@@ -217,7 +217,31 @@ function avalidateAuthority(req,res,next){
           break;
         case '/authority/giveAuthority':
           currentCode = 20
-          break;                  
+          break;
+        case '/indepot/addIndepot':
+          currentCode = 21
+          break;  
+        case '/indepot/getIndepot':
+          currentCode = 22
+          break;  
+        case '/indepot/upIndepot':
+          currentCode = 23
+          break;  
+        case '/indepot/delIndepot':
+          currentCode = 24
+          break;  
+        case '/outdepot/addOutdepot':
+          currentCode = 25
+          break;  
+        case '/outdepot/getOutdepot':
+          currentCode = 26
+          break;  
+        case '/outdepot/upOutdepot':
+          currentCode = 27
+          break;  
+        case '/outdepot/delOutdepot':
+          currentCode = 28
+          break;                                    
     }
     // console.log('ssss',req.apiCode)
     // console.log('ssss',userInfo)

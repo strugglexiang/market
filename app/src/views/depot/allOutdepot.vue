@@ -19,7 +19,7 @@
                       <el-input 
                         class="search-input"  
                         v-model="input" 
-                        placeholder="订单号、支付方式、支付总价"
+                        placeholder="订单号、支付源、支付方式、支付总价"
                         clearable
                       >
                           <template slot="prepend">关键字</template>
@@ -33,8 +33,8 @@
         <el-col :span="24">
             <!-- 表格 -->
             <div class="table-box">
-                <el-table :data="purchases" v-loading="listLoading" element-loading-text="拼命加载中" >
-                      <el-table-column prop="purchaseId" label="ID"  width='150'>
+                <el-table :data="orders" v-loading="listLoading" element-loading-text="拼命加载中" >
+                      <el-table-column prop="depotId" label="ID"  width='150'>
                       </el-table-column>
                       <el-table-column prop="updatedAt" label="创建时间" width='120' >
                           <template slot-scope="scope">
@@ -47,6 +47,8 @@
                           </template> 
                       </el-table-column>   
                       <el-table-column prop="payWay" label="支付方式" width='120' sortable >
+                      </el-table-column> 
+                      <el-table-column prop="origin" label="出货源" width='120' sortable >
                       </el-table-column>   
                       <el-table-column prop="total" label="总金额" width='120' sortable>
                       </el-table-column>                                                                 
@@ -77,14 +79,15 @@
           :visible.sync="showDetailModal"
           width="50%"
       >
-            <ul  class='detail' v-for = '(item) in detail' :key = "item.purchaseId">
+            <ul  class='detail' v-for = '(item) in detail' :key = "item.depotId">
               <li>
                  <span>商品名: {{item.goodName}}</span>
-                 <span>进货数量：{{item.num}}</span>
-                 <span>进货单价: {{item.price}}</span>
+                 <span>出货数量：{{item.num}}</span>
+                 <span>出货单价: {{item.price}}</span>
                  <span>汇总: {{item.all}}</span>
               </li>
             </ul> 
+            <p>出货源：{{detail.origin}}</p>
             <p>总价：{{detail.total}}</p>
           <span slot="footer" class="dialog-footer">
               <el-button type="primary" @click="cancelDetailModal">退 出</el-button>
@@ -105,7 +108,7 @@
 </template>
 
 <script>
-import minx from './minx/allPurchase.js'
+import minx from './minx/allOutdepot'
 export default {
     mixins: [minx],
     data(){
@@ -113,7 +116,7 @@ export default {
           listLoading:false,
           input:null,//关键字搜索
           //  ---- 表格相关
-          purchases:[],
+          orders:[],
           listQuery:{
                 pageSize: 5,
                 pageNo: 1
@@ -133,6 +136,7 @@ export default {
           this.detail = [] 
           this.detail = row.content
           this.detail.total = row.total
+          this.detail.origin = row.origin
           this.showDetailModal = true
       },
       // 点击编辑按钮
@@ -147,7 +151,7 @@ export default {
             type: "warning"
           })
           .then(() => {
-             this.delPurchase({
+             this.delOutdepot({
                 id:row['_id']
               })
           })
@@ -160,12 +164,12 @@ export default {
       // 每页数量改变
       handleSizeChange(val) {
         this.listQuery.pageSize = val;
-        this.getPurchases(this.listQuery)
+        this.getOutdepot(this.listQuery)
       },
       // 页数改变
       handleCurrentChange(val) {
         this.listQuery.pageNo = val;
-        this.getPurchases(this.listQuery)
+        this.getOutdepot(this.listQuery)
       },      
       // --------- 模态框相关 --------
       //取消查看订单详情
@@ -188,11 +192,11 @@ export default {
           }
           this.listQuery.keyword =  str
           this.listQuery.pageNo = 1
-          this.jieliu(this.getPurchases,this.listQuery)
+          this.jieliu(this.getOutdepot,this.listQuery)
       }
    }, 
    mounted(){
-     this.getPurchases(this.listQuery)
+     this.getOutdepot(this.listQuery)
    }
 }
 </script>
@@ -236,7 +240,7 @@ export default {
   float: left;
 }
 .search-input{
-  width:300px;
+  width:270px;
   margin:15px 0px 10px 70px;
 }
 // ----------- 表格

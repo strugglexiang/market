@@ -20,8 +20,10 @@ import upPerson from '@/views/setting/upPerson'
 
 // ----------- 总部私有  ---------
 // 货单管理
+import allIndepot from '@/views/depot/allIndepot'
 import inDepot from '@/views/depot/inDepot'
 import outDepot from '@/views/depot/outDepot'
+import allOutdepot from '@/views/depot/allOutdepot'
 // ----------- 洪山分部私有  ---------
 //--进货管理
 import allPurchases from '@/views/purchaseManagement/allPurchase'
@@ -110,17 +112,29 @@ export const zongChangRoutes = [
     permissionCode:4,
     children: [
        {
+         path:'/allIndepot',
+         component:allIndepot,
+         icon:'fa fa-cubes',     
+         name:'所有进货单'
+       },
+       {
          path:'/inDepot',
          component:inDepot,
-         icon:'el-icon-edit-outline',     
-         name:'进货管理'
+         icon:'fa fa-reply-all',     
+         name:'添加进货单'
        },
+       {
+        path:'/allOutdepot',
+        component:allOutdepot,
+        icon:'fa fa-diamond',     
+        name:'所有出货单'
+       }, 
        {
         path:'/outDepot',
         component:outDepot,
-        icon:'el-icon-rank',     
-        name:'出货管理'
-      },       
+        icon:'fa fa-chrome',     
+        name:'添加出货单'
+       },       
     ]
   },   
   {

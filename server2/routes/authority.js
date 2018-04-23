@@ -74,7 +74,7 @@ let global = require('../config')
                    result:temp
                })  
             }else{
-                console.log('走这里2')
+                // console.log('走这里2')
                 let selfCode = []
                 userInfo.authority.forEach((item,index,array) => {
                     selfCode.push(item.auCode) 

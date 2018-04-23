@@ -1,11 +1,10 @@
-let mongoose = require("mongoose")
+//---- 进货单
+let mongoose = require('mongoose')
 
+let Schema = mongoose.Schema
 
-let Schame = mongoose.Schema
-
-
-let purchaseSchema = new Schame ({
-    purchaseId:{
+let depotSchema = new Schema({
+    depotId:{
         type:'number',
         required:true
     },//进货单号
@@ -29,12 +28,16 @@ let purchaseSchema = new Schame ({
         type:'number',
         required:true
     },//此次进货总价
+    origin:{
+        type:'string',
+        required:true
+    },//出货部门
     payWay:{
         type:'string', 
         required:true,
-    },//支付方式  
+     },//支付方式  
 },{
     timestamps: true  //  createdAt  updatedAt
 })
 
-module.exports = mongoose.model('purchase',purchaseSchema)
+module.exports = mongoose.model('indepot',depotSchema)

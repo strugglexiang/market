@@ -1,21 +1,94 @@
 let express = require('express')
 let router = express.Router()
-let Order = require('../models/order')
+let Indepot = require('../models/indepot')
 let Goods = require('../models/goods')
 let global = require('../config')
 
 /**
  * 目录
- * 1.查询订单 权限码25
- * 2.添加订单 权限码26
- * 3.修改订单 权限码27
- * 4.删除订单 权限码28
- * 
+ * 1.添加进货单 权限码21
+ * 2.查询进货单 权限码22
+ * 3.修改进货单 权限码23
+ * 4.删除进货单 权限码24
  */
 
- //查询订单
-router.get('/getOrders',(req, res, next) => {
-    // console.log('sssssssssss',req.query.keyword)
+//添加进货单
+router.post('/addIndepot', (req, res, next) => {
+    if(!req.body.content){
+        return res.json({
+            status:'0',
+            msg:'请传入进货单内容'
+        })
+    }
+    if(!Array.isArray(req.body.content)){
+        return res.json({
+            status:'0',
+            msg:'进货内容的类型不正确'
+        })
+    }  
+    let params = {
+        depotId : new Date().getTime() + 100000000 + parseInt(Math.random() * 999999999),
+    }
+    if(req.body.total){
+        params.total = req.body.total
+    } 
+    if(req.body.payWay){
+        if(global.delKong(req.body.payWay).length){
+            params.payWay = global.delKong(req.body.payWay)
+        }else{
+            return res.json({
+                status:'0',
+                msg:'支付方式请不要传入空字符串'
+            })
+        }        
+    }      
+    if(req.body.content){
+        params.content = req.body.content
+    } 
+    if(req.body.origin){
+        params.origin = req.body.origin
+    }
+    //--------------- 商品中对应的商品数量减去
+    req.body.content.forEach((item,index,array) => {
+        // console.log(item)
+        Goods.update(
+            {
+               goodName: item.goodName,
+            },
+            {
+                $inc:{
+                    num: + item.num
+                }
+            },
+            (err,doc) => {
+               if(err){
+                   return res.json({
+                       statu:'0',
+                       msg:err.message
+                   })
+               }
+            },
+        )
+    })
+    //--------------- 生成订单    
+    let newOne = new Indepot(params)
+    newOne.save((err,doc) => {
+        if(err){
+            return res.json({
+                status:"0",
+                msg:err.message
+            })
+        }
+        return res.json({
+            status:"1",
+            msg:"添加进货单成功",
+            result:doc
+        })          
+    })    
+})
+
+//查询进货单
+router.get('/getIndepot', (req, res, next) => {
     let pageSize = Number.parseInt(req.query.pageSize)
     let pageNo = Number.parseInt(req.query.pageNo)
     let skip = (pageNo-1) < 0 ? 0 : (pageNo-1) * pageSize
@@ -26,24 +99,27 @@ router.get('/getOrders',(req, res, next) => {
         let params = {
             $or:[
                 {
-                    orderId: Boolean(Number.parseFloat(keyword)) ? Number.parseFloat(keyword) : null
-                },
-                {
-                    payWay: {$regex : reg}
+                    depotId: Boolean(Number.parseFloat(keyword)) ? Number.parseFloat(keyword) : null
                 },
                 {
                     total:Boolean(Number.parseFloat(keyword)) ? Number.parseFloat(keyword) : null
                 },
+                {
+                    origin: {$regex : reg}
+                },
+                {
+                    payWay: {$regex : reg}
+                },
             ]
         }
-        Order.count(params,(err,count) => {
+        Indepot.count(params,(err,count) => {
             if(err){
                 return res.json({
                     status:'0',
                     msg:err.message
                 })
             }
-            Order
+            Indepot
             .find(params)
             .limit(pageSize)
             .skip(skip)
@@ -63,21 +139,21 @@ router.get('/getOrders',(req, res, next) => {
                 }
                 return res.json({
                     status:'1',
-                    msg:'查询订单成功',
+                    msg:'查询进货单成功',
                     count:count,
                     result:doc
                 })
             })
         })             
     }else{
-        Order.count({},(err,count) => {
+        Indepot.count({},(err,count) => {
             if(err){
                 return res.json({
                     status:'0',
                     msg:err.message
                 })
             }
-            Order
+            Indepot
             .find({})
             .limit(pageSize)
             .skip(skip)
@@ -97,7 +173,7 @@ router.get('/getOrders',(req, res, next) => {
                 }
                 return res.json({
                     status:'1',
-                    msg:'查询订单成功',
+                    msg:'查询进货单成功',
                     count:count,
                     result:doc
                 })
@@ -106,87 +182,12 @@ router.get('/getOrders',(req, res, next) => {
     } 
 })
 
- //添加订单
-router.post('/addOrders',(req, res, next) => {
-    // console.log(req.Headers,req.body)
-    if(!req.body.content){
-        return res.json({
-            status:'0',
-            msg:'请传入订单内容'
-        })
-    }
-    if(!Array.isArray(req.body.content)){
-        return res.json({
-            status:'0',
-            msg:'订单内容的类型不正确'
-        })
-    }  
-    let params = {
-        orderId : new Date().getTime() + 100000000 + parseInt(Math.random() * 999999999)
-    }
-    if(req.body.total){
-        params.total = req.body.total
-    } 
-    if(req.body.payWay){
-        if(global.delKong(req.body.payWay).length){
-            params.payWay = global.delKong(req.body.payWay)
-        }else{
-            return res.json({
-                status:'0',
-                msg:'支付类型请不要传入空字符串'
-            })
-        }  
-    }
-    if(req.body.content){
-        params.content = req.body.content
-    } 
-    //--------------- 商品中对应的商品数量减去
-    req.body.content.forEach((item,index,array) => {
-        // console.log(item)
-        Goods.update(
-            {
-               goodName: item.goodName,
-            },
-            {
-                $inc:{
-                    num: - item.num
-                }
-            },
-            (err,doc) => {
-               if(err){
-                   return res.json({
-                       statu:'0',
-                       msg:err.message
-                   })
-               }
-            },
-        )
-    })
-    //--------------- 生成订单
-    let newOne = new Order(params)
-    newOne.save((err,doc) => {
-        if(err){
-            return res.json({
-                status:"0",
-                msg:err.message
-            })
-        }
-        return res.json({
-            status:"1",
-            msg:"添加订单成功",
-            result:doc,
-            
-        })          
-    })
-   
-})
-
-//修改订单
-router.post('/upOrders',(req, res, next) => {
+//修改进货单
+router.post('/upIndepot', (req, res, next) => {
     if(!req.body.id){
         return res.json({
             status:"0",
-            msg:'请传入订单id'
+            msg:'请传入进货单id'
         })
     }
     let params = {
@@ -195,23 +196,15 @@ router.post('/upOrders',(req, res, next) => {
     let upobj = {}
     if(req.body.total){
         upobj.total = req.body.total
-    }
-    if(req.body.payWay){
-        if(global.delKong(req.body.payWay).length){
-            upobj.payWay = global.delKong(req.body.payWay)
-        }else{
-            return res.json({
-                status:'0',
-                msg:'支付方式请不要传入空字符串'
-            })
-        }        
-    }   
-    // 数组定位修改
+    } 
     if(req.body.content){
         upobj.contents = req.body.content
     }
+    if(req.body.isAddGoods){
+        upobj.contents = req.body.isAddGoods
+    }
 
-    Order.update(params,upobj,(err,doc)=> {
+    Indepot.update(params,upobj,(err,doc)=> {
         if(err){
             return res.json({
                 status:"0",
@@ -220,24 +213,25 @@ router.post('/upOrders',(req, res, next) => {
         }
         return res.json({
             status:"1",
-            msg:"修改订单成功",
+            msg:"修改进货单成功",
             result:doc
         })        
     })
 })
 
-//删除订单
-router.get('/delOrders',(req, res, next) => {
+
+//删除进货单
+router.get('/delIndepot', (req, res, next) => {
     if(!req.query.id){
         return res.json({
             status:"0",
-            msg:'请传入订单id'
+            msg:'请传入进货单id'
         })
     }
     let params = {
         _id: req.query.id
     }
-    Order.remove(params,(err,doc) => {
+    Indepot.remove(params,(err,doc) => {
         if(err){
             return res.json({
                 status:"0",
@@ -246,12 +240,11 @@ router.get('/delOrders',(req, res, next) => {
         }
         return res.json({
             status:"1",
-            msg:"删除订单成功",
+            msg:"删除进货单成功",
             result:doc
         })          
     })
 })
-
 
 
 module.exports = router

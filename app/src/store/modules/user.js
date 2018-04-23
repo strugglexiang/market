@@ -40,7 +40,7 @@ let actions = {
         return new Promise((resolve, reject) => {
             getUserInfo()
             .then(res => {
-                // console.log('我运行到了这里')
+                // console.log('我运行到了这里',res)
                 // 需要存入用户其他信息的在这里操作
                  if(res.data.status === '1'){
                     resolve(res.data.result[0]) 

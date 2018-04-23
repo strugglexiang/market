@@ -9,6 +9,8 @@ var user = require('./routes/user');
 var goodsType = require('./routes/goodsType');
 var goods = require('./routes/goods');
 var authority = require('./routes/authority');
+var indepot = require('./routes/indepot');
+var outdepot = require('./routes/outdepot');
 //导入全局变量
 var global = require('./config')
 
@@ -62,5 +64,7 @@ app.use('/user', user);
 app.use('/goodsType', goodsType);
 app.use('/goods', goods);
 app.use('/authority', authority);
+app.use('/indepot', indepot);
+app.use('/outdepot', outdepot);
 
 module.exports = app;

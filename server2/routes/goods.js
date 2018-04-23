@@ -116,7 +116,7 @@ router.get('/getGoods',(req,res,next) => {
             }
             if(!doc.length){
                 return res.json({
-                    status:'0',
+                    status:'1',
                     msg:'没有符合条件的选项',
                     result:doc
                 })
@@ -154,7 +154,7 @@ router.get('/getGoods',(req,res,next) => {
             }
             if(!doc.length){
                 return res.json({
-                    status:'0',
+                    status:'1',
                     msg:'没有符合条件的选项',
                     result:doc
                 })

@@ -67,6 +67,11 @@ service.interceptors.response.use(response => {
 } ,error => {
     console.log('response拦截器错误' , error,error.response)// for debug
     // console.log('token失效是运行这里吗')
+    //   Message({
+    //     message: error.message,
+    //     type: 'warning',
+    //     duration: 2 * 1000
+    //   })
     Message({
       message: error.response.data.msg,
       type: 'warning',

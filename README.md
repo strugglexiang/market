@@ -853,3 +853,5 @@ created() {
 3. 组件2分发组件1自定义事件，传递信息event.target
 this.$root.eventHub.$emit('cart.add', event.target); // 传输点击的目标元素
 ```
+
+随便测试一下

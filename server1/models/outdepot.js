@@ -1,9 +1,9 @@
-//---- 进货单
+//---- 出货单
 let mongoose = require('mongoose')
 
 let Schema = mongoose.Schema
-
-let depotSchema = new Schema({
+// console.log('我威什么会执行两遍outDepotSchema')
+let outDepotSchema = new Schema({
     depotId:{
         type:'number',
         required:true
@@ -24,10 +24,6 @@ let depotSchema = new Schema({
         type:'number',
         default:1,
     },//是否已经出库  1没有  2 已经出库
-    total:{
-        type:'number',
-        required:true
-    },//此次出库总价
     origin:{
         type:'string',
         required:true
@@ -40,4 +36,5 @@ let depotSchema = new Schema({
     timestamps: true  //  createdAt  updatedAt
 })
 
-module.exports = mongoose.model('outdepot',depotSchema)
+let model = mongoose.model('outdepot',outDepotSchema)
+module.exports = model

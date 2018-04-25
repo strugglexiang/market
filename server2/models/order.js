@@ -3,6 +3,7 @@ let mongoose = require('mongoose')
 let Schema = mongoose.Schema
 
 
+// console.log('我执行了一遍创建orderSchema')
 let orderSchema = new Schema({
     orderId:{
        type:'number',

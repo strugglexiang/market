@@ -63,7 +63,7 @@
       <el-row>
         <el-col :span="24">
             <div class="line-box">
-                <!-- 本周或日销售情况 -->
+                <!-- 本月或日销售情况 -->
                 <div class="line-box-sold">
                     
                 </div>
@@ -71,7 +71,7 @@
         </el-col> 
         <el-col :span="24">
             <div class="line-box">
-                <!-- 本周或日进货情况 -->
+                <!-- 本月或日进货情况 -->
                 <div class="line-box-get">
                    
                 </div>                 
@@ -97,7 +97,7 @@ export default {
       //点击销售切换
       changeGetDate(){
          if(this.get === '日'){
-            this.get = '周'
+            this.get = '月'
          }else{
             this.get = '日'
          }
@@ -105,14 +105,14 @@ export default {
       //点击进货切换
       changeSoldDate(){
          if(this.sold === '日'){
-            this.sold = '周'
+            this.sold = '月'
          }else{
             this.sold = '日'
          }
       },
       changePieChartDate(){
          if(this.pieChartGet === '日'){
-            this.pieChartGet = '周'
+            this.pieChartGet = '月'
          }else{
             this.pieChartGet = '日'
          }

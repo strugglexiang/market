@@ -3,7 +3,7 @@ let mongoose = require("mongoose")
 
 let Schame = mongoose.Schema
 
-
+// console.log('我执行了一遍创建purchaseSchema')
 let purchaseSchema = new Schame ({
     purchaseId:{
         type:'number',
@@ -25,10 +25,6 @@ let purchaseSchema = new Schame ({
         type:'number',
         default:1,
     },//是否已经入库  1没有  2 已经入库
-    total:{
-        type:'number',
-        required:true
-    },//此次进货总价
     payWay:{
         type:'string', 
         required:true,

@@ -1,7 +1,7 @@
 let mongoose = require('mongoose')
 
 let Schema = mongoose.Schema
-
+// console.log('我执行了一遍创建userSchema')
 let userSchema = new Schema({
     userName:{
         type:'string',

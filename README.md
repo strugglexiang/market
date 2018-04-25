@@ -854,4 +854,3 @@ created() {
 this.$root.eventHub.$emit('cart.add', event.target); // 传输点击的目标元素
 ```
 
-随便测试一下

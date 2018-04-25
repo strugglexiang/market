@@ -268,6 +268,20 @@ function avalidateAuthority(req,res,next){
     }
 }
 
+// ---------------------- 获得今天的时间戳
+function getToday(){
+   let time = new Date()
+   time.setHours(0,0,0,0)
+   return time.getTime()
+}
+
+// --------------------- 获得本月第一天的时间戳
+function getMonthday(){
+   let date = new Date()
+   date.setDate(1)
+   date.setHours(0,0,0,0)
+   return date.getTime()
+}
 
 // ------------------------ 最后导出
 module.exports = {
@@ -280,4 +294,6 @@ module.exports = {
     delKong,//消除空格
     getBaseAuthority, //获取基础权限
     avalidateAuthority,//接口权限限制中间件
+    getToday,//获取今日时间戳
+    getMonthday,//获取本月初时间戳
 }

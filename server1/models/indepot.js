@@ -2,8 +2,8 @@
 let mongoose = require('mongoose')
 
 let Schema = mongoose.Schema
-
-let depotSchema = new Schema({
+// console.log('我执行了一遍创建inDepotSchema')
+let inDepotSchema = new Schema({
     depotId:{
         type:'number',
         required:true
@@ -24,10 +24,6 @@ let depotSchema = new Schema({
         type:'number',
         default:1,
     },//是否已经入库  1没有  2 已经入库
-    total:{
-        type:'number',
-        required:true
-    },//此次进货总价
     origin:{
         type:'string',
         required:true
@@ -40,4 +36,6 @@ let depotSchema = new Schema({
     timestamps: true  //  createdAt  updatedAt
 })
 
-module.exports = mongoose.model('indepot',depotSchema)
+  let model = mongoose.model('indepot',inDepotSchema)
+
+  module.exports = model

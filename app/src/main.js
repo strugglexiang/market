@@ -16,6 +16,12 @@ import 'font-awesome/css/font-awesome.css'
 //引入自写公共样式
 import '@/assets/css/reset.css'
 
+// 全局引入echarts
+// 引入echarts
+// import echarts from 'echarts'
+
+// Vue.prototype.$echarts = echarts 
+
 //调试功能
 Vue.config.productionTip = false
 Vue.use(ElementUI);
@@ -86,5 +92,8 @@ new Vue({
   router,
   store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  data:{
+    eventHub: new Vue(),//第三方总线 
+  }
 })

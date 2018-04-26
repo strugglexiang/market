@@ -1,6 +1,7 @@
 import api from '@/api'
 import { login , getUserInfo } from '@/ajax/login'
 import { noAuRoutes, zongChangRoutes , hongshanChangRoutes} from '@/router'
+import _ from 'underscore'
 
 let state = {
     token:123123123,
@@ -108,7 +109,11 @@ let mutations = {
     //生成的有权限的路由表mutation
     mytation_generateRoutes(state,routers){
         // console.log(routers)
-        state.addRouters = routers;
+        //------------------- 这里为了避免其他用户刚登陆进来不是首页，所以我先排好序
+        let temp = _.sortBy(routers, function(item) {
+            return item.permissionCode;
+        });
+        state.addRouters = temp;
         state.routers = noAuRoutes.concat(routers);    
         // console.log('我运行到这里',state.addRouters)    
     },

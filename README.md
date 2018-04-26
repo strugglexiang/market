@@ -34,7 +34,9 @@
 - [26-mongoose数组类型数据操作](#26-mongoose数组类型数据操作)
 - [27-vue里面父子组件通信](#27-vue里面父子组件通信)
 - [28-vue里面非父子组件通信](#28-vue里面非父子组件通信)
-
+- [29-axios同时发送多个请求](#29-axios同时发送多个请求)
+- [30-vue中使用echarts](#30-vue中使用echarts)
+- [31-echart图表随宽度变化而变化](#31-echart图表随宽度变化而变化)
 ### 1-项目结构搭建
 1. 使用官方脚手架vue-cli搭建目录结构
 >1. npm i -g vue-cli
@@ -854,3 +856,73 @@ created() {
 this.$root.eventHub.$emit('cart.add', event.target); // 传输点击的目标元素
 ```
 
+### 29-axios同时发送多个请求
+```
+axios.all([way1(),way2()])
+.then(axios.spread((way1result, way2result) => {
+    //结果按上面请求的数据
+    console.log(way1result)
+    console.log(way2result)
+}))
+```
+
+### 30-vue中使用echarts
+https://blog.csdn.net/mr_wuch/article/details/70225364
+1. 安装
+```
+npm install echarts -S
+```
+2. 全局引入
+```
+// 引入echarts
+import echarts from 'echarts'
+
+Vue.prototype.$echarts = echarts 
+```
+3. 使用
+```
+<div id="myChart" :style="{width: '300px', height: '300px'}"></div>
+
+export default {
+  name: 'hello',
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  mounted(){
+    this.drawLine();
+  },
+  methods: {
+    drawLine(){
+        // 基于准备好的dom，初始化echarts实例
+        let myChart = this.$echarts.init(document.getElementById('myChart'))
+        // 绘制图表
+        myChart.setOption({
+            title: { text: '在Vue中使用echarts' },
+            tooltip: {},
+            xAxis: {
+                data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
+        });
+    }
+  }
+}
+注意： 这里echarts初始化应在钩子函数mounted()中，这个钩子函数是在el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用
+```
+
+
+### 31-echart图表随宽度变化而变化
+```
+window.onresize = function(){
+  myChart.resize();
+  只要在改变宽度时重新渲染就可以了
+  谢谢，有一个疑问，这里不设置函数节流会不会导致页面很卡，因为你不断触发resize
+});
+```

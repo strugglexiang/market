@@ -59,6 +59,14 @@ export default {
       // console.log('侧边栏隐藏和显示')
        this.$store.dispatch('sideStatu_action')
        this.iconIschange = !this.iconIschange 
+      //  console.log(this.$route)
+       let that = this
+      //  that.$root.eventHub.$emit('drawBoxChange')
+       if(this.$route.name === '首页'){
+          setTimeout(function(){
+              that.$root.eventHub.$emit('drawBoxChange')
+          },400)
+       }
     },
     //点击功能
     handleCommand(command){
@@ -80,7 +88,7 @@ export default {
         this.show = false
         setTimeout(function(){
            this.show = true
-        }.bind(this), 400);
+        }.bind(this), 280);
     }
   },
   mounted () {

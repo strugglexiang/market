@@ -16,7 +16,7 @@
       </el-row>
       <!-- 数据总结 -->
       <el-row >
-        <el-col :xs="24" :sm="12" :md="12" :lg="12" >
+        <el-col :xs="24" :sm="24" :md="8" :lg="8" >
             <div >
                  <!-- 销售情况 -->
                  <div class="data-box">
@@ -29,17 +29,21 @@
                         <el-tooltip class="item" effect="dark" content="点击切换" placement="right">
                               <p class="p" @click = 'changeSoldDate'>
                                   <span class="strong">{{sold}}</span>
-                                  <span>往分部发货</span>
+                                  <span>出货</span>
                               </p>
                         </el-tooltip>                         
-                          <p class= 'num'>{{soldNum}}￥</p>
+                          <p class= 'num'>
+                              ￥
+                              <!-- {{allOut}} -->
+                              <countTo :startVal='0' :endVal='allOut' :duration='1000'></countTo>
+                          </p>
                      </div>
                  </div>
             </div>
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="12" >
+        <el-col :xs="24" :sm="24" :md="8" :lg="8" >
             <div >
-                 <!-- 销售情况 -->
+                 <!-- 进货情况 -->
                  <div class="data-box">
                      <!-- 图标 -->
                      <div class="icon-box">
@@ -53,26 +57,51 @@
                                   <span>进货</span>
                               </p>
                         </el-tooltip>                         
-                        <p class= 'num'>{{getNum}}￥</p>
+                        <p class= 'num'>
+                            ￥
+                            <!-- {{allIn}} -->
+                            <countTo :startVal='0' :endVal='allIn' :duration='1000'></countTo>
+                        </p>
                      </div>
                  </div>
             </div>
         </el-col>
+        <!-- 饼状图 -->
+        <el-col :xs="24" :sm="24" :md="8" :lg="8" >
+            <div >
+                 <!-- 出货 -->
+                 <div class="data-box pie-chart">
+                     <!-- 文字 -->
+                     <div class="text-box">
+                        <el-tooltip class="item" effect="dark" :content="get + '统计'" placement="right">
+                              <p class='title' >
+                                  <span class="strong">{{get}}</span>
+                                  <span>进货统计</span>
+                              </p>
+                        </el-tooltip> 
+                        <!-- 图区域 -->
+                        <div id="bin">
+                            <!-- 123 -->
+                        </div>                        
+                     </div>
+                 </div>
+            </div>
+        </el-col>    
       </el-row>
       <!-- 图表总结 -->
       <el-row>
         <el-col :span="24">
             <div class="line-box">
-                <!-- 本月或日销售情况 -->
-                <div class="line-box-sold">
+                <!-- 本周或月出货情况 -->
+                <div class="line-box-sold" id='xianout'>
                     
                 </div>
             </div>           
         </el-col> 
         <el-col :span="24">
             <div class="line-box">
-                <!-- 本月或日进货情况 -->
-                <div class="line-box-get">
+                <!-- 本周或月进货情况 -->
+                <div class="line-box-get" id='xianin'>
                    
                 </div>                 
             </div>           
@@ -83,45 +112,80 @@
 
 <script>
 import api from '@/api'
+import min from './min/indexZong'
+// 引入基本模板
+let echarts = require('echarts/lib/echarts')
+// 引入柱状图组件
+require('echarts/lib/chart/bar')
+require('echarts/lib/chart/pie')
+require('echarts/lib/chart/line')
+// 引入提示框和title组件
+require('echarts/lib/component/tooltip')
+require('echarts/lib/component/title')
 export default {
+   mixins: [min],
    data(){
        return {
            sold:'日',//周，日切换
-           soldNum:100,//
            get:'日',//周，日切换
-           getNum:100,//
-           pieChartGet:'日',
+           //------- 数据部分
+           binOut:[],
+           binIn:[],
+           xianOut:[],
+           xianIn:[],
+          //--------- 
+           binChart:null,
+           outLIneChart:null,
+           inLineChart:null,
        }
    },
    methods:{
-      //点击销售切换
+      //点击进货切换
       changeGetDate(){
          if(this.get === '日'){
             this.get = '月'
+            this.getBinIn({keyword:'month'})
+            this.getLineIn({keyword:'month'})
          }else{
             this.get = '日'
+            this.getBinIn({keyword:'day'})
+            this.getLineIn({keyword:'day'})
          }
       },
-      //点击进货切换
+      //点击销售切换
       changeSoldDate(){
          if(this.sold === '日'){
             this.sold = '月'
+            this.getBinOut({keyword:'month'})
+            this.getLineOut({keyword:'month'})
          }else{
             this.sold = '日'
+            this.getBinOut({keyword:'day'})
+            this.getLineOut({keyword:'day'})
          }
       },
-      changePieChartDate(){
-         if(this.pieChartGet === '日'){
-            this.pieChartGet = '月'
-         }else{
-            this.pieChartGet = '日'
-         }
-      }
    },
    computed: {
        part(){
           return api.getPartName()
        },
+   },
+   mounted(){
+    //    console.log('首页已经加载')
+    //    console.log(this.$store)
+       let that = this
+       this.getAllData({keyword: 'day'})
+      //  binChart  outLIneChart  inLineChart
+       this.binChart = echarts.init(document.getElementById('bin'))
+       this.outLIneChart = echarts.init(document.getElementById('xianout'))
+       this.inLineChart = echarts.init(document.getElementById('xianin'))
+      // ---- window窗口变化处理  
+       window.onresize = function(){
+          that.jieliu(that.drawBoxChange)
+       }
+      //----- div切换变化
+    //   console.log(this.$root.eventHub)
+      this.$root.eventHub.$on('drawBoxChange',this.drawBoxChange)
    }
 }
 </script>
@@ -155,7 +219,8 @@ export default {
 //----------- 图表总结 
 .data-box{
 //    width:200px;
-//    max-width: 350px;
+//    height:80px;
+   height:220px;
    margin:auto;
    background:#FEFEFE;
 //    border-radius: 15px;
@@ -176,6 +241,8 @@ export default {
         line-height: 40px;
         color:#666;
         font-size:14px;
+        display: flex;
+        flex-direction: column;
         // 提示文字
         .item{
             border:1px solid #ccc;//加上边框
@@ -183,7 +250,7 @@ export default {
             cursor: pointer;        
         }
         .p{
-            max-width:120px;
+            width:65px;
             -webkit-user-select: none;
             user-select: none;            
         }
@@ -197,8 +264,25 @@ export default {
            color:#FF5E52;
            font-size:25px;
         }
+        #bin{
+            flex: 1;
+            margin-top:7px;
+        }
    }
 }
+
+// ----------- 饼状图
+.pie-chart{
+    // width:300px;
+    height:220px;
+    border:1px solid #ccc;
+    .title{
+        width: 120px;
+        -webkit-user-select: none;
+        user-select: none;           
+    }
+}  
+
 
 // ----------- 线状图
 .line-box{
@@ -207,8 +291,15 @@ export default {
 }
 .line-box-sold,.line-box-get{
     margin:40px 40px 0px 40px;
+    // max-width: 1070px;
+    // margin:auto;
+    // margin-top:10px;
     height:100%;
     background: #FEFEFE;
+    // overflow: scroll;
+    // &::-webkit-scrollbar {
+    //    display: none;
+    // }
 }
 </style>
 

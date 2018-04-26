@@ -46,7 +46,7 @@ function analyzeAuthority(auArray){
         //首页
         if(item.auCode === 0){
             //接口暂代开发,先连接一个空数组
-            temp = temp.concat([])
+            temp = temp.concat([29,30,31,32])
         }
         //登陆
         if(item.auCode === 1){
@@ -248,7 +248,19 @@ function avalidateAuthority(req,res,next){
           break;   
         case '/order/delOrders':
           currentCode = 28
-          break;                                 
+          break;
+        case '/count/xianin':
+          currentCode = 29
+          break; 
+        case '/count/xianout':
+          currentCode = 30
+          break; 
+        case '/count/binin':
+          currentCode = 31
+          break; 
+        case '/count/binout':
+          currentCode = 32
+          break;                                          
     }
     // console.log('接口权限',req.body.apiCode)
     // console.log('ssss',userInfo.isAdmin)

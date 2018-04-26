@@ -35,6 +35,14 @@ import addOrder from '@/views/sold/addOrder'
 
 Vue.use(Router)
 
+// // --- 判断是加载总部首页还是加载分部首页
+let indexComponent = null
+import api from '@/api'
+if(api.getPartName() === '总部'){
+  indexComponent = IndexZong
+}else{
+  indexComponent = IndexFen
+}
 
 //--- 配置不需要权限的路由
 let routes = [
@@ -43,19 +51,21 @@ let routes = [
     name: '登陆',
     component: Login
   },
-  {
-    path: '',
-    component: Home,
-    redirect: '/',
-    name:"主页",
-    children: [
-       {
-         path:'/',
-         component:IndexFen,
-         name:'首页'//二级路由默认展示首页
-       },
-    ]
-  },   
+  // {
+  //   path: '',
+  //   component: Home,
+  //   redirect: '/',
+  //   name:"主页",
+  //   children: [
+  //      {
+  //        path:'/',
+  //        component:IndexFen,
+  //        component:indexComponent,
+  //        component:IndexZong,
+  //        name:'首页'//二级路由默认展示首页
+  //      },
+  //   ]
+  // },   
 ]
 export default new Router({
   routes
@@ -66,6 +76,20 @@ export const noAuRoutes = routes
 
 //--- 导出总部需要动态生成的路由
 export const zongChangRoutes = [
+  {
+    path: '',
+    component: Home,
+    redirect: '/',
+    name:"主页",
+    permissionCode:0,
+    children: [
+       {
+         path:'/',
+         component:IndexZong,
+         name:'首页'//二级路由默认展示首页
+       },
+    ]
+  }, 
   {
     path: '/',
     component: Home,
@@ -177,6 +201,20 @@ export const zongChangRoutes = [
 
 //--- 导出洪山需要动态生成的路由
 export const hongshanChangRoutes = [
+  {
+    path: '',
+    component: Home,
+    redirect: '/',
+    name:"主页",
+    permissionCode:0,
+    children: [
+       {
+         path:'/',
+         component:IndexFen,
+         name:'首页'//二级路由默认展示首页
+       },
+    ]
+  }, 
   {
     path: '/',
     component: Home,

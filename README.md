@@ -451,8 +451,8 @@ service.interceptors.response.use(response => {
      //这里做拦截
      return Promise.reject(error)
 })
-
-发现解决方案
+```
+发现解决方案:
 ```
 1.后端跨域要处理option请求
     if (req.method == 'OPTIONS') {
@@ -466,7 +466,7 @@ service.interceptors.response.use(response => {
 
     })
 3. 这样前端response拦截器就能接收到response的错误
-res.json返回的数据用error.response拿取    
+res.json返回的数据用error.response拿取  
 ```
 
 ### 19-有关权限模块的思考
@@ -488,7 +488,7 @@ sava的时候拿这个全局数组存
 >码是不是在临时数组里面，如果不在，说明没有权限访问这个接口，return就行了。
 
 ```
-1.用户最基础权限配置
+1. 用户最基础权限配置
 let baseAuthority = [
     {
         auName: '首页',//type string
@@ -503,7 +503,7 @@ let baseAuthority = [
         auCode: 6,// type number
     },
 ]
-2.解析前端的权限码，生成小权限数组
+2. 解析前端的权限码，生成小权限数组
 function analyzeAuthority(auArray){
     let temp = []
     auArray.forEach((item,index,array) => {
@@ -511,9 +511,9 @@ function analyzeAuthority(auArray){
     })
     return temp 
 }
-3.权限解析逻辑
+3. 权限解析逻辑
 req.body.apiCode = analyzeAuthority(userInfo.authority)
-4.接口权限限制中间件
+4. 接口权限限制中间件
 function avalidateAuthority(req,res,next){
     // console.log(req.originalUrl)
     // console.log(req.apiCode)
@@ -541,7 +541,7 @@ function avalidateAuthority(req,res,next){
         })
     }
 }
-5.最后使用中间件测试
+5. 最后使用中间件测试
 app.use((req,res,next) => {
     // console.log(req.originalUrl,req.originalUrl.includes('/upload'))
     // || req.originalUrl === '/goods/upload'
@@ -574,6 +574,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 ```
+> 我在做这个动态路由的时候出现死循环是因为请求回来的至少要有一个权限，如果没有，addRoute === 0 就一直成立，所有会一直出现死循环，所以我设置了每个人都至少有首页、登录、修改个人信息的权限
 
 ### 21-es6数组去重
 用到set和Array.from。

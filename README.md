@@ -625,6 +625,7 @@ https://www.cnblogs.com/xiaohuochai/p/7215067.html?utm_source=itdadao&utm_medium
 
 
 ### 24-mongodb中group进行分组计算
+```
 // 准备测试数据
 db.user.drop();
 for(var i=10; i< 100; i++) {

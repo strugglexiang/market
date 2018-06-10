@@ -34,7 +34,7 @@
           </el-form-item> 
           <!-- 提交 -->
           <div class="bt-box">
-             <el-button class="bt"  :loading="loading" type="primary" @click="submitForm">LOGIN</el-button>     
+             <el-button class="bt"  :loading="loading" type="primary" @click="submitForm">登陆</el-button>     
           </div>
       </el-form>
   </div>

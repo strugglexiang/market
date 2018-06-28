@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"hongshanmarket.users"},{"v":2,"unique":true,"key":{"userName":1},"name":"userName_1","ns":"hongshanmarket.users","background":true}],"uuid":"4da1700a8b6f4677b6f4e3653f7beb53"}

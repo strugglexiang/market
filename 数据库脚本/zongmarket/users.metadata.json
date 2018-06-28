@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"zongmarket.users"},{"v":2,"unique":true,"key":{"userName":1},"name":"userName_1","ns":"zongmarket.users","background":true}],"uuid":"5d02ab698c0d42fa9a1e0a3af4d51344"}
